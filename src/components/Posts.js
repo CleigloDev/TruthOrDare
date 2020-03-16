@@ -7,6 +7,7 @@ import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
 
 import PostGraphic from '../graficComponents/PostGraphic';
+import ToolTipPost from '../graficComponents/ToolTipPostGraphic';
 
 export default function Post({ navigation }) {
     const [posts , setPosts] = useState([]);
@@ -49,7 +50,9 @@ export default function Post({ navigation }) {
     _renderItemPost = ({item, index}) => {
         return (
             <PostGraphic text={item.data.text} location={"Roma"} 
-                delete={_deletePost} navigate={_navigateDetail.bind(this, item)}/>
+                delete={_deletePost} navigate={_navigateDetail.bind(this, item)}>
+                    <ToolTipPost delete={() => {}} save={() => {}} flag={() => {}} />
+                </PostGraphic>
         );
     };
 

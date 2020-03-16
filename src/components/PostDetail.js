@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View, Text, FlatList, TouchableOpacity, TextInput} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {SafeAreaView, StyleSheet, Text, FlatList} from 'react-native';
 import 'react-native-gesture-handler';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
 
+import ToolTipPost from '../graficComponents/ToolTipPostGraphic';
 import NewMessageGraphic from '../graficComponents/NewMessageGraphic';
 import PostGraphic from '../graficComponents/PostGraphic';
 import CommentGraph from '../graficComponents/CommentGraphic';
@@ -80,7 +80,9 @@ export default function Post({ route, navigation }) {
     return (
         <SafeAreaView style={styles.safeArea}>
             <PostGraphic location={"Roma"} text={postText} 
-                delete={() =>{}} navigate={() =>{}}/>
+                delete={() =>{}} navigate={() =>{}}>
+                    <ToolTipPost delete={() => {}} save={() => {}} flag={() => {}} />
+                </PostGraphic>
             <Text style={{paddingLeft: 10}}>Commenti</Text>
             <FlatList
                 keyExtractor={(item, index) => 'key'+index}

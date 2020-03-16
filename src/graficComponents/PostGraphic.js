@@ -2,6 +2,8 @@ import React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import { Tooltip } from 'react-native-elements';
+
 
 export default function PostGraphic(props) {
 
@@ -12,9 +14,9 @@ export default function PostGraphic(props) {
                     <MaterialCommunityIcons name="map-marker-outline" size={15} />
                     <Text style={styles.textLocation}>{props.location}</Text>
                 </View>
-                <TouchableOpacity onPress={props.delete}>
+                <Tooltip containerStyle={styles.tooltip} popover={props.children ? props.children : <></>}>
                     <SimpleLineIcons name="options-vertical" size={15}/>
-                </TouchableOpacity>
+                </Tooltip>
             </View>
             <TouchableOpacity onPress={props.navigate}>
                 <Text style={styles.textContent}>{props.text}</Text>
@@ -43,5 +45,11 @@ const styles = StyleSheet.create({
     textLocation: {
         fontSize: 13, 
         paddingBottom: 10
+    },
+    tooltip: {
+        height: "auto", 
+        backgroundColor: "white", 
+        borderColor: "black", 
+        borderWidth: 1
     }
 });
