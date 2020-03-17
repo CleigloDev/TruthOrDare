@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
@@ -6,6 +6,7 @@ import { Tooltip } from 'react-native-elements';
 
 
 export default function PostGraphic(props) {
+    const refTooltip = useRef(null);
 
     return (
         <View style={styles.viewContent}>
@@ -14,7 +15,9 @@ export default function PostGraphic(props) {
                     <MaterialCommunityIcons name="map-marker-outline" size={15} />
                     <Text style={styles.textLocation}>{props.location}</Text>
                 </View>
-                <Tooltip containerStyle={styles.tooltip} popover={props.children ? props.children : <></>}>
+                <Tooltip ref={refTooltip} 
+                    containerStyle={styles.tooltip} popover={props.children ? 
+                    React.cloneElement(props.children, {refTool: refTooltip}) : <></>}>
                     <SimpleLineIcons name="options-vertical" size={15}/>
                 </Tooltip>
             </View>

@@ -22,7 +22,8 @@ export default function Post({ navigation }) {
         setShowBusy(true);
         firebaseRef.collection("posts").add({
             date: new Date(),
-            text: newPost
+            text: newPost,
+            deleted: 0
         }).then(() => {
             setShowBusy(false);
             navigation.navigate("Home");

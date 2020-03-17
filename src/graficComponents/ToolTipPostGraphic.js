@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -7,15 +7,18 @@ export default function ToolTipPost(props) {
 
     return (
         <>
-            <TouchableOpacity style={styles.buttonTool} onPress={props.delete}>
+            <TouchableOpacity style={styles.buttonTool} 
+                onPress={() => {props.delete(), props.refTool.current.toggleTooltip()}}>
                 <MaterialCommunityIcons name="delete-outline" size={18} />
                 <Text>Delete</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonTool} onPress={props.flag}>
+            <TouchableOpacity style={styles.buttonTool} 
+                onPress={() => {props.flag(), props.refTool.current.toggleTooltip()}}>
                 <MaterialCommunityIcons name="flag-remove" size={18} />
                 <Text>Segnala</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonTool} onPress={props.save}>
+            <TouchableOpacity style={styles.buttonTool} 
+                onPress={() => {props.save(), props.refTool.current.toggleTooltip()}}>
                 <MaterialIcons name="favorite" size={18} />
                 <Text>Salva</Text>
             </TouchableOpacity>

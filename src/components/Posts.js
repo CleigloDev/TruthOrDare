@@ -21,8 +21,8 @@ export default function Post({ navigation }) {
         };
     }, []);
 
-    _deletePost = () => {
-
+    _deletePost = (sPostKey) => {
+        firebaseRef.collection("posts").doc(sPostKey).update({deleted: 1});
     };
 
     _snapshotPosts = () => {
@@ -32,11 +32,13 @@ export default function Post({ navigation }) {
     _loadPosts = (aDocuments) => {
         let aDocData = [];
         aDocuments.forEach((oDoc) => {
-            aDocData.push(Object.assign({}, { 
-                    id: oDoc.id, 
-                    data: oDoc.data()
-                }
-            ));
+            if(oDoc && oDoc.data && oDoc.data().deleted === 0){
+                aDocData.push(Object.assign({}, { 
+                        id: oDoc.id, 
+                        data: oDoc.data()
+                    }
+                ));
+            }
         });
         setPosts(aDocData);
     };
@@ -49,9 +51,9 @@ export default function Post({ navigation }) {
 
     _renderItemPost = ({item, index}) => {
         return (
-            <PostGraphic text={item.data.text} location={"Roma"} 
-                delete={_deletePost} navigate={_navigateDetail.bind(this, item)}>
-                    <ToolTipPost delete={() => {}} save={() => {}} flag={() => {}} />
+            <PostGraphic text={item.data.text} location={"Roma"}
+                navigate={_navigateDetail.bind(this, item)}>
+                    <ToolTipPost delete={_deletePost.bind(this, item.id)} save={() => {}} flag={() => {}} />
                 </PostGraphic>
         );
     };
