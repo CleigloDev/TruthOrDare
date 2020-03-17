@@ -8,6 +8,7 @@ import '@react-native-firebase/firestore';
 import { TouchableOpacity, TextInput } from 'react-native-gesture-handler';
 
 import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';
+import { UserManager } from '../modules/UserManager.js';
 
 export default function Post({ navigation }) {
     const [newPost, setNewPost] = useState("");

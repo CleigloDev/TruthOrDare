@@ -80,8 +80,8 @@ export default function Post({ route, navigation }) {
     return (
         <SafeAreaView style={styles.safeArea}>
             <PostGraphic location={"Roma"} text={postText} navigate={() =>{}}>
-                    <ToolTipPost delete={() => {}} save={() => {}} flag={() => {}} />
-                </PostGraphic>
+                <ToolTipPost delete={() => {}} save={() => {}} flag={() => {}} />
+            </PostGraphic>
             <Text style={{paddingLeft: 10}}>Commenti</Text>
             <FlatList
                 keyExtractor={(item, index) => 'key'+index}
