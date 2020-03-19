@@ -10,7 +10,13 @@ export class UserManager {
         return new Promise(async(resolve, reject) => {
             try{
                 const sUID = await AsyncStorage.getItem("UID");
-                resolve(sUID);
+                if(sUID){
+                    resolve(sUID);
+                }else{
+                    alert("Ops! sembra che tu non sia loggato");
+                    navigation ? navigation.navigate("Login") : null;
+                    reject("");
+                }
             }catch(e){
                 alert("Ops! sembra che tu non sia loggato");
                 navigation ? navigation.navigate("Login") : null;

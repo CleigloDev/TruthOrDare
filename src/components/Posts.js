@@ -9,14 +9,21 @@ import '@react-native-firebase/firestore';
 import PostGraphic from '../graficComponents/PostGraphic';
 import ToolTipPost from '../graficComponents/ToolTipPostGraphic';
 import NoPost from '../graficComponents/NoPostGraphic';
+import { UserManager } from '../modules/UserManager.js';
 
 export default function Post({ navigation }) {
+    const [uid, setUID] = useState("");
     const [posts , setPosts] = useState([]);
     const firebaseRef = firebase.firestore();
 
-    useEffect(() => { 
-        const snapShotPost = _snapshotPosts();
-
+    useEffect(() => {
+        var snapShotPost;
+        UserManager.getCurrentUID(navigation).then(sUID => {
+            setUID(sUID);
+            snapShotPost = _snapshotPosts();
+        }).catch(() => {
+            setShowBusy(false);
+        });
         return () => {
             snapShotPost();
         };
@@ -54,7 +61,8 @@ export default function Post({ navigation }) {
         return (
             <PostGraphic text={item.data.text} location={"Roma"}
                 navigate={_navigateDetail.bind(this, item)}>
-                    <ToolTipPost delete={_deletePost.bind(this, item.id)} save={() => {}} flag={() => {}} />
+                    <ToolTipPost uidCreator={item.data.uid} uidCurrent={uid}
+                        delete={_deletePost.bind(this, item.id)} save={() => {}} flag={() => {}} />
             </PostGraphic>
         );
     };
