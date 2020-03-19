@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, StatusBar, FlatList, TouchableOpacity} from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, FlatList, TouchableOpacity, View, Text} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import 'react-native-gesture-handler';
 import firebase from '@react-native-firebase/app';
@@ -8,6 +8,7 @@ import '@react-native-firebase/firestore';
 
 import PostGraphic from '../graficComponents/PostGraphic';
 import ToolTipPost from '../graficComponents/ToolTipPostGraphic';
+import NoPost from '../graficComponents/NoPostGraphic';
 
 export default function Post({ navigation }) {
     const [posts , setPosts] = useState([]);
@@ -54,21 +55,25 @@ export default function Post({ navigation }) {
             <PostGraphic text={item.data.text} location={"Roma"}
                 navigate={_navigateDetail.bind(this, item)}>
                     <ToolTipPost delete={_deletePost.bind(this, item.id)} save={() => {}} flag={() => {}} />
-                </PostGraphic>
+            </PostGraphic>
         );
     };
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <FlatList
-                keyExtractor={(item, index) => 'key'+index}
-                data={posts}
-                extraData={posts}
-                renderItem={_renderItemPost}
-            />
-            <TouchableOpacity style={styles.centerItem} onPress={() => navigation.navigate('NewPost')}>
-                <MaterialIcons style={styles.iconAdd} name="add-circle-outline" size={70}/>
-            </TouchableOpacity>
+            {posts.length > 0 ?
+                <FlatList
+                    keyExtractor={(item, index) => 'key'+index}
+                    data={posts}
+                    extraData={posts}
+                    renderItem={_renderItemPost}
+                />
+            : <NoPost/>} 
+            <View style={styles.buttonAdd}>
+                <TouchableOpacity onPress={() => navigation.navigate('NewPost')}>
+                    <MaterialIcons style={styles.iconAdd} name="add-circle-outline" size={70}/>
+                </TouchableOpacity>
+            </View>
         </SafeAreaView>
     );
 }
@@ -78,8 +83,14 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "white"
     },
-    centerItem: {
-        alignItems: "center"
+    buttonAdd: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 50,
+        zIndex: 3,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     iconAdd: {
         color: "#d1d1d1"

@@ -21,15 +21,20 @@ export default function Post({ navigation }) {
 
     _createPost = () => {
         setShowBusy(true);
-        firebaseRef.collection("posts").add({
-            date: new Date(),
-            text: newPost,
-            deleted: 0
-        }).then(() => {
-            setShowBusy(false);
-            navigation.navigate("Home");
-        }).catch((err) => {
-            alert("Creazione post fallita! Riprovare..")
+        UserManager.getCurrentUID(navigation).then(sUID => {
+            firebaseRef.collection("posts").add({
+                date: new Date(),
+                text: newPost,
+                deleted: 0,
+                uid: sUID,
+            }).then(() => {
+                setShowBusy(false);
+                navigation.navigate("Home");
+            }).catch((err) => {
+                alert("Creazione post fallita! Riprovare..")
+                setShowBusy(false);
+            });
+        }).catch(() => {
             setShowBusy(false);
         });
     };

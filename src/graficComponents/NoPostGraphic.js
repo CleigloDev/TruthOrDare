@@ -1,17 +1,18 @@
 import React from 'react';
 import {StyleSheet, View, Text, ActivityIndicator} from 'react-native';
 
-export default function busyIndicator(props) {
+export default function NoPost(props) {
     return (
-        <View style={styles.busyIndicator}>
-            <ActivityIndicator animating={props.showBusy} size="large"/>
-            <Text>{props.text ? props.text : ""}</Text>
+        <View style={styles.viewText}>
+            <Text style={styles.textNoPost}>
+                {"Ehi sembra non ci sia nessuno qui!\nScrivi il primo post! ;)"}
+            </Text>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    busyIndicator:{
+    viewText:{
         flex: 1,
         backgroundColor: "white",
         position: 'absolute',
@@ -22,5 +23,9 @@ const styles = StyleSheet.create({
         zIndex: 1,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    textNoPost: {
+        fontSize: 25, 
+        flexShrink: 1 
     }
 });
