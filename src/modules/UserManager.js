@@ -1,3 +1,5 @@
+import React from 'react';
+import {AsyncStorage} from 'react-native';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
@@ -5,26 +7,15 @@ import '@react-native-firebase/firestore';
 export class UserManager {
     
     static getCurrentUID = (navigation) => {
-        return this.getCurrentUser(navigation).uid;
+        return new Promise(async(resolve, reject) => {
+            try{
+                const sUID = await AsyncStorage.getItem("UID");
+                resolve(sUID);
+            }catch(e){
+                alert("Ops! sembra che tu non sia loggato");
+                navigation ? navigation.navigate("Login") : null;
+                reject("");
+            }
+        });
     };
-
-    static getCurrentUser = (navigation) => {
-        try{
-            const oUser = firebase.auth().currentUsers;
-            return oUser;
-        }catch(error){
-            alert("Ops! sembra che tu non sia loggato");
-            navigation.navigate("Login");
-        }
-    }
-    
-    static isUserOnline = (navigation) => {
-        try{
-            var bLoggedIn = !!firebase.auth().currentUsers;
-            return bLoggedIn;
-        }catch(error){
-            alert("Ops! sembra che tu non sia loggato");
-            navigation.navigate("Login");
-        }
-    }
 }

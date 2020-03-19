@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View, StatusBar, Text, TouchableOpacity, Image} from 'react-native';
+import {SafeAreaView, StyleSheet, View, StatusBar, Text, TouchableOpacity, Image, AsyncStorage} from 'react-native';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
@@ -11,15 +11,21 @@ export default function Login({ navigation }) {
     const [showBusy, setShowBusy] = useState(true);
 
     useEffect(() => {
-        var bUserLogged = UserManager.isUserOnline(navigation);
-        if(bUserLogged) (setShowBusy(false), navigation.navigate("MainStack"))
-        else(setShowBusy(false));
+        UserManager.getCurrentUID(navigation)
+        .then(() => {
+            setShowBusy(false); 
+            navigation.navigate("MainStack")
+        })
+        .catch(() => {
+            setShowBusy(false)
+        });
     }, []);
 
     _login = () => {
         firebase.auth()
         .signInAnonymously()
         .then(oUserInfo => {
+            AsyncStorage.setItem("UID", oUserInfo.user.uid);
             navigation.navigate("MainStack");
         }).catch((error) => {
             alert(error);
