@@ -6,26 +6,22 @@ import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
 
-import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';
 import PostGraphic from '../graficComponents/PostGraphic';
 import ToolTipPost from '../graficComponents/ToolTipPostGraphic';
 import NoPost from '../graficComponents/NoPostGraphic';
 import TabBar from '../graficComponents/TabBarGraphic';
 import { UserManager } from '../modules/UserManager.js';
 
-export default function Post({ navigation }) {
+export default function SavedPost({ navigation }) {
     const [uid, setUID] = useState("");
     const [posts , setPosts] = useState([]);
-    const [showBusy, setShowBusy] = useState(true);
     const firebaseRef = firebase.firestore();
 
     useEffect(() => {
         var snapShotPost;
-        setShowBusy(true);
         UserManager.getCurrentUID(navigation).then(sUID => {
             setUID(sUID);
             snapShotPost = _snapshotPosts();
-            setShowBusy(false);
         }).catch(() => {
             setShowBusy(false);
         });
@@ -34,17 +30,14 @@ export default function Post({ navigation }) {
         };
     }, []);
 
-    _deletePost = (sPostKey) => {
+    _deletePost = (sPostKey, sPostSavedKey) => {
         firebaseRef.collection("posts").doc(sPostKey).update({deleted: 1});
-    };
-
-    _savePost = (postInfo, postID) => {
-        postInfo.id = postID;
-        firebaseRef.collection("users").doc(uid).collection("savedPosts").add(postInfo);
+        firebaseRef.collection("users").doc(uid).collection("savedPosts").doc(sPostSavedKey).update({deleted: 1});
     };
 
     _snapshotPosts = () => {
-        return firebaseRef.collection("posts").orderBy("date", "desc").onSnapshot(_loadPosts);
+        return firebaseRef.collection("users").doc(uid).collection("savedPosts")
+        .orderBy("date", "desc").onSnapshot(_loadPosts);
     };
 
     _loadPosts = (aDocuments) => {
@@ -63,12 +56,8 @@ export default function Post({ navigation }) {
 
     _navigateDetail = (item) => {
         navigation.navigate("PostDetail", {
-            "postKey": item.id
+            "postKey": item.data.id
         });
-    };
-
-    _navigateSave = () => {
-        navigation.navigate("SavedPosts");
     };
 
     _renderItemPost = ({item, index}) => {
@@ -76,8 +65,8 @@ export default function Post({ navigation }) {
             <PostGraphic text={item.data.text} location={"Roma"}
                 navigate={_navigateDetail.bind(this, item)}>
                     <ToolTipPost uidCreator={item.data.uid} uidCurrent={uid}
-                        delete={_deletePost.bind(this, item.id)} 
-                        save={_savePost.bind(this, item.data, item.id)} flag={() => {}} />
+                        delete={_deletePost.bind(this, item.data.id, item.id)} 
+                        save={null} flag={() => {}} />
             </PostGraphic>
         );
     };
@@ -91,14 +80,7 @@ export default function Post({ navigation }) {
                     extraData={posts}
                     renderItem={_renderItemPost}
                 />
-            : <NoPost text={"Ehi sembra non ci sia nessuno qui!\nScrivi il primo post! ;)"}/>} 
-            <View style={styles.buttonAdd}>
-                <TouchableOpacity onPress={() => navigation.navigate('NewPost')}>
-                    <MaterialIcons style={styles.iconAdd} name="add-circle-outline" size={70}/>
-                </TouchableOpacity>
-            </View>
-            <TabBar leftAction={() => {}} rightAction={_navigateSave}/>
-            {showBusy && <BusyIndicator text={"Creazione commento..."} showBusy={showBusy}/>}
+            : <NoPost text={"Nessun post salvato!"}/>}
         </SafeAreaView>
     );
 }
@@ -118,7 +100,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     iconAdd: {
-        backgroundColor: 'white',
         color: "#d1d1d1"
     }
 });

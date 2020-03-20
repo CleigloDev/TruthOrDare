@@ -11,7 +11,7 @@ export default function PostGraphic(props) {
     return (
         <View style={styles.viewContent}>
             <View style={styles.flexRow}>
-                <View style={{flex: 7}}>
+                <View style={{flex: 1}}>
                     <MaterialCommunityIcons name="map-marker-outline" size={15} />
                     <Text style={styles.textLocation}>{props.location}</Text>
                 </View>
@@ -24,6 +24,11 @@ export default function PostGraphic(props) {
             <TouchableOpacity onPress={props.navigate}>
                 <Text style={styles.textContent}>{props.text}</Text>
             </TouchableOpacity>
+            <View style={{alignItems: 'flex-end'}}>
+                <TouchableOpacity onPress={props.chat}>
+                    <MaterialCommunityIcons name="message-reply" size={20}/>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -37,10 +42,10 @@ const styles = StyleSheet.create({
     viewContent:{
         height: "auto", 
         borderWidth: 1,
-        borderRadius: 5,
+        borderRadius: 10,
         borderColor: "#d1d1d1",
         padding: 10,
-        marginBottom: 10
+        margin: 5
     },
     flexRow: {
         flexDirection: "row"

@@ -5,7 +5,7 @@ export default function NoPost(props) {
     return (
         <View style={styles.viewText}>
             <Text style={styles.textNoPost}>
-                {"Ehi sembra non ci sia nessuno qui!\nScrivi il primo post! ;)"}
+                {props.text}
             </Text>
         </View>
     );

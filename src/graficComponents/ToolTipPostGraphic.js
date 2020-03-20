@@ -19,11 +19,12 @@ export default function ToolTipPost(props) {
                     <MaterialCommunityIcons name="flag-remove" size={18} />
                     <Text>Segnala</Text>
                 </TouchableOpacity> : null}
-            <TouchableOpacity style={styles.buttonTool} 
-                onPress={() => {props.save(), props.refTool.current.toggleTooltip()}}>
-                <MaterialIcons name="favorite" size={18} />
-                <Text>Salva</Text>
-            </TouchableOpacity>
+            {typeof props.save === "function" ?
+                <TouchableOpacity style={styles.buttonTool} 
+                    onPress={() => {props.save(), props.refTool.current.toggleTooltip()}}>
+                    <MaterialIcons name="favorite" size={18} />
+                    <Text>Salva</Text>
+                </TouchableOpacity> : null}
         </>
     );
 }

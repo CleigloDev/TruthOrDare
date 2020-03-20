@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Post from './src/components/Posts';
 import NewPost from './src/components/NewPost';
 import PostDetail from './src/components/PostDetail';
+import SavedPosts from './src/components/SavedPosts';
 import Login from './src/components/Login';
 
 const Stack = createStackNavigator();
@@ -17,6 +18,7 @@ function MainStack() {
       <Stack.Screen name="Home" component={Post}/>
       <Stack.Screen name="NewPost" component={NewPost}/>
       <Stack.Screen name="PostDetail" component={PostDetail}/>
+      <Stack.Screen name="SavedPosts" component={SavedPosts}/>
     </Stack.Navigator>
   );
 }
