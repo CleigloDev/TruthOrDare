@@ -6,42 +6,54 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 export default function busyIndicator(props) {
     return (
         <>
-            <View style={styles.buttonLeft}>
-                <TouchableOpacity onPress={props.leftAction} style={styles.alignCenter}>
-                    <Ionicons name="logo-snapchat" size={30}/>
-                    <Text>Ghost Chat</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.buttonRight}>
-                <TouchableOpacity onPress={props.rightAction} style={styles.alignCenter}>
-                    <MaterialIcons name="favorite-border" size={30}/>  
-                    <Text style={{fontSize: 15}}>Post Salvati</Text>
-                </TouchableOpacity>
+            <View style={styles.mainView}>
+                <View style={styles.viewWrapper}>
+                    <TouchableOpacity onPress={props.leftAction} style={styles.buttonAdd}>
+                        <Ionicons name="logo-snapchat" size={30}/>
+                        <Text>Ghost Chat</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.viewWrapper}>
+                    <TouchableOpacity style={styles.buttonAdd} onPress={props.centerAction}>
+                        <MaterialIcons style={styles.iconAdd} name="add-circle-outline" size={70}/>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.viewWrapper}>
+                    <TouchableOpacity onPress={props.rightAction} style={styles.alignCenter}>
+                        <MaterialIcons name="favorite-border" size={30}/>  
+                        <Text style={{fontSize: 15}}>Post Salvati</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </>
     );
 }
 
 const styles = StyleSheet.create({
-    buttonLeft: {
-        position: 'absolute',
-        left: 60,
-        bottom: 30,
-        zIndex: 3,
-        alignItems: 'center',
-        justifyContent: 'center'
+    mainView: {
+        flexDirection: 'row', 
+        flex: 1,
+        justifyContent: 'space-between'
     },
-    buttonRight: {
-        position: 'absolute',
-        right: 35,
-        bottom: 30,
-        zIndex: 3,
-        alignItems: 'center',
-        justifyContent: 'center'
+    viewWrapper: {
+        flex: 1, 
+        justifyContent: 'center', 
+        alignItems: 'center'
     },
     alignCenter: {
         backgroundColor: 'white',
         alignItems: 'center', 
         justifyContent: 'center'
+    },
+    buttonAdd: {
+        borderRadius: 30,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    iconAdd: {
+        backgroundColor: 'transparent',
+        color: "#d1d1d1",
+        paddingBottom: 100
     }
 });

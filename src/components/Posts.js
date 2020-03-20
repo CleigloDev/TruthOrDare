@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, StatusBar, FlatList, TouchableOpacity, View, Text} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import 'react-native-gesture-handler';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
@@ -84,41 +85,41 @@ export default function Post({ navigation }) {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            {posts.length > 0 ?
-                <FlatList
-                    keyExtractor={(item, index) => 'key'+index}
-                    data={posts}
-                    extraData={posts}
-                    renderItem={_renderItemPost}
-                />
-            : <NoPost text={"Ehi sembra non ci sia nessuno qui!\nScrivi il primo post! ;)"}/>} 
-            <View style={styles.buttonAdd}>
-                <TouchableOpacity onPress={() => navigation.navigate('NewPost')}>
-                    <MaterialIcons style={styles.iconAdd} name="add-circle-outline" size={70}/>
-                </TouchableOpacity>
+            <View style={{flex: 3}}>
+                {posts.length > 0 ?
+                    <FlatList
+                        keyExtractor={(item, index) => 'key'+index}
+                        data={posts}
+                        extraData={posts}
+                        renderItem={_renderItemPost}
+                    />
+                : <NoPost text={"Ehi sembra non ci sia nessuno qui!\nScrivi il primo post! ;)"}/>}
             </View>
-            <TabBar leftAction={() => {}} rightAction={_navigateSave}/>
+            <View style={{...styles.viewFlex, ...styles.viewShadow}}>
+                <TabBar centerAction={() => {navigation.navigate("NewPost")}} leftAction={() => {}} rightAction={_navigateSave}/>
+            </View>
             {showBusy && <BusyIndicator text={"Creazione commento..."} showBusy={showBusy}/>}
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
+    viewFlex: {
+        flex: 0.20,
+        backgroundColor: "white"
+    },
+    viewShadow: {
+        shadowOpacity: 0.5,
+        shadowColor: "black",
+        shadowRadius: 2,
+        shadowOffset: {
+            width: 0,
+            height: -3,
+        },
+        elevation: 2,
+    },
     safeArea: {
         flex: 1,
         backgroundColor: "white"
-    },
-    buttonAdd: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 50,
-        zIndex: 3,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    iconAdd: {
-        backgroundColor: 'white',
-        color: "#d1d1d1"
     }
 });
