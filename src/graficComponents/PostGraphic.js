@@ -11,7 +11,7 @@ export default function PostGraphic(props) {
     return (
         <View style={styles.viewContent}>
             <View style={styles.flexRow}>
-                <View style={{flex: 1}}>
+                <View style={styles.viewLocation}>
                     <MaterialCommunityIcons name="map-marker-outline" size={15} />
                     <Text style={styles.textLocation}>{props.location}</Text>
                 </View>
@@ -34,6 +34,10 @@ export default function PostGraphic(props) {
 }
 
 const styles = StyleSheet.create({
+    viewLocation: {
+        flex: 1, 
+        flexDirection: 'row'
+    },
     textContent: {
         flexShrink: 1, 
         fontSize: 20,
