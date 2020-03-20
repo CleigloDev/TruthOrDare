@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, StatusBar, FlatList, TouchableOpacity, View, Text} from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import 'react-native-gesture-handler';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
 
 import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';
+import HeaderLocation from '../graficComponents/HeaderLocationGraphic';
 import PostGraphic from '../graficComponents/PostGraphic';
 import ToolTipPost from '../graficComponents/ToolTipPostGraphic';
 import NoPost from '../graficComponents/NoPostGraphic';
@@ -86,14 +84,17 @@ export default function Post({ navigation }) {
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={{flex: 3}}>
-                {posts.length > 0 ?
-                    <FlatList
-                        keyExtractor={(item, index) => 'key'+index}
-                        data={posts}
-                        extraData={posts}
-                        renderItem={_renderItemPost}
-                    />
-                : <NoPost text={"Ehi sembra non ci sia nessuno qui!\nScrivi il primo post! ;)"}/>}
+                <HeaderLocation />
+                <View style={{flex: 3}}>
+                    {posts.length > 0 ?
+                        <FlatList
+                            keyExtractor={(item, index) => 'key'+index}
+                            data={posts}
+                            extraData={posts}
+                            renderItem={_renderItemPost}
+                        />
+                    : <NoPost text={"Ehi sembra non ci sia nessuno qui!\nScrivi il primo post! ;)"}/>}
+                </View>
             </View>
             <View style={{...styles.viewFlex, ...styles.viewShadow}}>
                 <TabBar centerAction={() => {navigation.navigate("NewPost")}} leftAction={() => {}} rightAction={_navigateSave}/>
