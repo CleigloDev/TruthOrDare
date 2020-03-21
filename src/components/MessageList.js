@@ -4,6 +4,8 @@ import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
 
+import NoPost from '../graficComponents/NoPostGraphic';
+import HeaderText from '../graficComponents/HeaderTextGraphic';
 import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';
 import MessageListItem from '../graficComponents/MessageListItemGraphic';
 import { UserManager } from '../modules/UserManager.js';
@@ -64,12 +66,18 @@ export default function MessageList({ route, navigation }) {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <FlatList
-                data={chats}
-                extraData={chats}
-                renderItem={_renderChatItem}
-                keyExtractor={(item, index) => 'key'+index}
-            />
+            {chats && chats.length > 0 ?
+                <>
+                    <HeaderText text={"Lista chat attive"}/>
+                    <View style={{flex: 3}}>
+                        <FlatList
+                            data={chats}
+                            extraData={chats}
+                            renderItem={_renderChatItem}
+                            keyExtractor={(item, index) => 'key'+index}
+                        />
+                    </View> 
+                </> : <NoPost text={"Ehi sembra non ci sia alcuna chat attiva!"}/>}
             {showBusy && <BusyIndicator text={"Avvio l'app.."} showBusy={showBusy}/>}
         </SafeAreaView>
     );

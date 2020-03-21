@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View, StatusBar, Text, TouchableOpacity, Image, AsyncStorage, FlatList} from 'react-native';
+import React from 'react';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
@@ -37,7 +37,9 @@ const styles = StyleSheet.create({
         marginTop: 30, 
         margin: 30, 
         borderRadius: 25, 
-        backgroundColor: 'lightgray',
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: 'lightgray',
         justifyContent: 'center'
     },
     textHeader: {

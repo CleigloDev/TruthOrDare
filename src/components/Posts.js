@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, StatusBar, FlatList, TouchableOpacity, View, Text} from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, FlatList, View} from 'react-native';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
@@ -110,7 +110,7 @@ export default function Post({ navigation }) {
                             extraData={posts}
                             renderItem={_renderItemPost}
                         />
-                    : <NoPost text={"Ehi sembra non ci sia nessuno qui!\nScrivi il primo post! ;)"}/>}
+                    : <NoPost text={"Ehi sembra non ci sia nessuno qui!\nScrivi il primo post! 😉"}/>}
                 </View>
             </View>
             <View style={{...styles.viewFlex, ...styles.viewShadow}}>
