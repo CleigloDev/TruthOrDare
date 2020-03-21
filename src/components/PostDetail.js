@@ -10,6 +10,11 @@ import NewMessageGraphic from '../graficComponents/NewMessageGraphic';
 import PostGraphic from '../graficComponents/PostGraphic';
 import CommentGraph from '../graficComponents/CommentGraphic';
 
+firebase.firestore().settings({
+    cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
+    persistence: true
+});
+
 export default function Post({ route, navigation }) {
     const [postText, setPostText] = useState("");
     const [IDPost, setPostID] = useState("");

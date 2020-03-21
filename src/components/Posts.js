@@ -12,6 +12,11 @@ import NoPost from '../graficComponents/NoPostGraphic';
 import TabBar from '../graficComponents/TabBarGraphic';
 import { UserManager } from '../modules/UserManager.js';
 
+firebase.firestore().settings({
+    cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
+    persistence: true
+});
+
 export default function Post({ navigation }) {
     const [uid, setUID] = useState("");
     const [posts , setPosts] = useState([]);

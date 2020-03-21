@@ -9,8 +9,12 @@ import '@react-native-firebase/firestore';
 import PostGraphic from '../graficComponents/PostGraphic';
 import ToolTipPost from '../graficComponents/ToolTipPostGraphic';
 import NoPost from '../graficComponents/NoPostGraphic';
-import TabBar from '../graficComponents/TabBarGraphic';
 import { UserManager } from '../modules/UserManager.js';
+
+firebase.firestore().settings({
+    cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
+    persistence: true
+});
 
 export default function SavedPost({ navigation }) {
     const [uid, setUID] = useState("");
