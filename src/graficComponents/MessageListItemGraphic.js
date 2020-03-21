@@ -26,6 +26,10 @@ export default function MessageListItem(props) {
                     <View>
                         <Text style={styles.textHeader}>Ultimo messaggio:</Text>
                         <AsyncText style={styles.textAsync} textPromise={_getLastMessage()}/>
+                        {//TODO: add Date for new Messages
+                        /*<View style={{alignItems: 'flex-end'}}>
+                            <Text style={{paddingRight: 15, paddingBottom: 5}}>Ciao</Text>
+                        </View>*/}
                     </View>
             </TouchableOpacity>
         </>
@@ -36,6 +40,7 @@ const styles = StyleSheet.create({
     viewWrapper: {
         marginTop: 30, 
         margin: 30, 
+        marginBottom: 0,
         borderRadius: 25, 
         backgroundColor: 'white',
         borderWidth: 1,

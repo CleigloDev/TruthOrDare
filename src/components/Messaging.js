@@ -77,17 +77,20 @@ export default function Messaging({ route, navigation }) {
     };
 
     _loadMessages = (aDocuments) => {
-        var aNewMessages = [];
+        let aNewMessages = [];
         aDocuments.forEach((oDoc) => {
-            aNewMessages.push(oDoc.data());
+            const oDocData = oDoc.data();
+            oDocData.createdAt = new Date(oDocData.createdAt.toDate());
+            aNewMessages.push(oDocData);
         });
-        var aPrintableMessages = GiftedChat.append(convMessages, aNewMessages);
+        const aPrintableMessages = GiftedChat.append(convMessages, aNewMessages);
         setMessages(aPrintableMessages);
     };
 
     return (
         <SafeAreaView style={styles.safeArea}>
             <GiftedChat
+                placeholder={"Scrivi un messaggio..."}
                 messages={convMessages}
                 user={{
                     _id: uid

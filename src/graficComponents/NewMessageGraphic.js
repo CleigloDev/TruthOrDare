@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, TextInput, TouchableOpacity, Dimensions} from 'react-native';
+import {StyleSheet, View, TextInput, TouchableOpacity, Dimensions, Platform} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
@@ -19,7 +19,7 @@ export default function NewMessageFooter(props) {
             {props.text && props.text.length > 0 ?
             <View style={styles.viewIconSend}>
                 <TouchableOpacity onPress={props.send}>
-                    <MaterialCommunityIcons style={styles.iconSend} name="send" size={30}/>
+                    <MaterialCommunityIcons style={styles.iconSend} name="send" size={33}/>
                 </TouchableOpacity>
             </View> : null}
         </View>   
@@ -58,7 +58,8 @@ const styles = StyleSheet.create({
         paddingBottom: 5
     },
     viewIconSend: {
-        flex: 0.2, 
-        justifyContent: 'flex-end'
+        flex: 0.23, 
+        justifyContent: 'flex-end',
+        paddingBottom: Platform.OS === 'ios' ? 0 : 5,
     }
 });

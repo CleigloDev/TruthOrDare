@@ -68,7 +68,7 @@ export default function MessageList({ route, navigation }) {
         <SafeAreaView style={styles.safeArea}>
             {chats && chats.length > 0 ?
                 <>
-                    <HeaderText text={"Lista chat attive"}/>
+                    <HeaderText text={"Chat attive"}/>
                     <View style={{flex: 3}}>
                         <FlatList
                             data={chats}
