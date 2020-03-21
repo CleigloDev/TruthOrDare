@@ -17,7 +17,8 @@ export default function AsyncText(props) {
 
     return (
         <>  
-            <Text style={props.style}>{text}</Text>
+            <Text style={props.style}>{text && props.maxLength && props.maxLength < text.length 
+                ? text.substr(0,props.maxLength)+"..." : text}</Text>
         </>
     );
 }

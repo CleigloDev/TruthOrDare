@@ -25,7 +25,7 @@ export default function MessageListItem(props) {
                 onPress={props.navigateToChat.bind(this, props.chatID)}>
                     <View>
                         <Text style={styles.textHeader}>Ultimo messaggio:</Text>
-                        <AsyncText style={styles.textAsync} textPromise={_getLastMessage()}/>
+                        <AsyncText style={styles.textAsync} textPromise={_getLastMessage()} maxLength={33}/>
                         {//TODO: add Date for new Messages
                         /*<View style={{alignItems: 'flex-end'}}>
                             <Text style={{paddingRight: 15, paddingBottom: 5}}>Ciao</Text>
