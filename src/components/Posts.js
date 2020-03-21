@@ -82,6 +82,10 @@ export default function Post({ navigation }) {
         });
     };
 
+    _navigateMessagesList = () => {
+        navigation.navigate("MessageList");
+    };
+
     _renderItemPost = ({item, index}) => {
         return (
             <PostGraphic text={item.data.text} location={"Roma"} chat={_navigateChat.bind(this, item.data.uid)}
@@ -110,7 +114,9 @@ export default function Post({ navigation }) {
                 </View>
             </View>
             <View style={{...styles.viewFlex, ...styles.viewShadow}}>
-                <TabBar centerAction={() => {navigation.navigate("NewPost")}} leftAction={() => {}} rightAction={_navigateSave}/>
+                <TabBar centerAction={() => {navigation.navigate("NewPost")}} 
+                    leftAction={_navigateMessagesList}
+                    rightAction={_navigateSave}/>
             </View>
             {showBusy && <BusyIndicator text={"Caricamento..."} showBusy={showBusy}/>}
         </SafeAreaView>

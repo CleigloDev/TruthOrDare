@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View, StatusBar, Text, TouchableOpacity, Image, AsyncStorage, FlatList} from 'react-native';
+import {SafeAreaView, StyleSheet, View, StatusBar} from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat'
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
@@ -13,7 +13,7 @@ firebase.firestore().settings({
     persistence: true
 });
 
-export default function Login({ route, navigation }) {
+export default function Messaging({ route, navigation }) {
     const [uid, setUID] = useState("");
     const [uidOther, setOtherUID] = useState("");
     const [convMessages, setMessages] = useState([]);
@@ -39,9 +39,32 @@ export default function Login({ route, navigation }) {
     }, []);
 
     _onSend = messages => {
+        if(convMessages.length === 0) _createChatIntoUser();
         messages[0].user.avatar = null;
         firebaseRef.collection("chats").doc(_chatDoc())
             .collection("messages").doc(messages[0]._id).set(messages[0]);
+    };
+
+    _createChatIntoUser = () => {
+        let chatDoc = _chatDoc();
+
+        _setChatIdLogic(uid, chatDoc);
+        _setChatIdLogic(uidOther, chatDoc);
+    };
+
+    _setChatIdLogic = (sUID, chatDoc) => {
+        return firebaseRef.collection("users").doc(sUID).get().then((oDoc) => {
+            if(oDoc.data() && oDoc.data().chats){
+                let chats = oDoc.data().chats;
+                let foundChat = chats.find(chatId => chatId === chatDoc);
+                if(!foundChat)(
+                    chats.push(chatDoc),
+                    firebaseRef.collection("users").doc(sUID).update({...chats, ...oDoc.data()})
+                );
+            }else{
+                firebaseRef.collection("users").doc(sUID).set({chats: [chatDoc]});
+            }
+        });
     };
 
     _chatDoc = () => {
@@ -80,11 +103,5 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
         backgroundColor: "white"
-    },
-    textContent: {
-        flexShrink: 1, 
-        fontSize: 20,
-        paddingBottom: 30,
-        padding: 10
-    },
+    }
 });

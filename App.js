@@ -10,6 +10,7 @@ import PostDetail from './src/components/PostDetail';
 import SavedPosts from './src/components/SavedPosts';
 import Login from './src/components/Login';
 import Messaging from './src/components/Messaging';
+import MessageList from './src/components/MessageList';
 
 const Stack = createStackNavigator();
 const StackLogin = createStackNavigator();
@@ -22,6 +23,7 @@ function MainStack() {
       <Stack.Screen name="PostDetail" component={PostDetail}/>
       <Stack.Screen name="SavedPosts" component={SavedPosts}/>
       <Stack.Screen name="Chat" component={Messaging}/>
+      <Stack.Screen name="MessageList" component={MessageList}/>
     </Stack.Navigator>
   );
 }

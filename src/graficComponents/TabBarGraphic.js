@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, ActivityIndicator, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Text, ActivityIndicator, TouchableOpacity, Platform} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -54,6 +54,6 @@ const styles = StyleSheet.create({
     iconAdd: {
         backgroundColor: 'transparent',
         color: "#d1d1d1",
-        paddingBottom: 100
+        paddingBottom: Platform.OS === 'ios' ? 100 : 30
     }
 });
