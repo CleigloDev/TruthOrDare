@@ -28,7 +28,6 @@ export default function Messaging({ route, navigation }) {
             setOtherUID(uidCreator);
             setUID(sUID);
             snapShotMessages = _snapshotMessages();
-            setShowBusy(false);
         }).catch(() => {
             setShowBusy(false);
         });
@@ -85,6 +84,7 @@ export default function Messaging({ route, navigation }) {
         });
         const aPrintableMessages = GiftedChat.append(convMessages, aNewMessages);
         setMessages(aPrintableMessages);
+        setShowBusy(false);
     };
 
     return (

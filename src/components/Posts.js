@@ -29,7 +29,6 @@ export default function Post({ navigation }) {
         UserManager.getCurrentUID(navigation).then(sUID => {
             setUID(sUID);
             snapShotPost = _snapshotPosts();
-            setShowBusy(false);
         }).catch(() => {
             setShowBusy(false);
         });
@@ -64,6 +63,7 @@ export default function Post({ navigation }) {
             }
         });
         setPosts(aDocData);
+        setShowBusy(false);
     };
 
     _navigateDetail = (item) => {

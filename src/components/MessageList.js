@@ -27,7 +27,6 @@ export default function MessageList({ route, navigation }) {
         UserManager.getCurrentUID(navigation).then(sUID => {
             setUID(sUID);
             snapShotUser = _snapshotUser();
-            setShowBusy(false);
         }).catch(() => {
             setShowBusy(false);
         });
@@ -47,6 +46,7 @@ export default function MessageList({ route, navigation }) {
             const aChats = oUserInfo.chats;
             const aChatSet = [...(new Set([...chats,...aChats]))];
             setChats(aChatSet);
+            setShowBusy(false);
         }
     };
 

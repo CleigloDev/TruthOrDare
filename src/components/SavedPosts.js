@@ -27,7 +27,7 @@ export default function SavedPost({ navigation }) {
             setUID(sUID);
             snapShotPost = _snapshotPosts();
         }).catch(() => {
-            setShowBusy(false);
+            //setShowBusy(false);
         });
         return () => {
             snapShotPost();
