@@ -1,42 +1,64 @@
 import React from 'react';
-import {StyleSheet, View, TextInput, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, TextInput, TouchableOpacity, Dimensions} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 
 export default function NewMessageFooter(props) {
 
     return (
-        <View style={styles.viewNewComment}>
-            <TextInput style={styles.inputNewComment}
-                value={props.text}
-                onChangeText={props.setText}
-                multiline={true}
-            />
-            <TouchableOpacity onPress={props.send}>
-                <MaterialCommunityIcons style={styles.iconSend} name="send" size={30}/>
-            </TouchableOpacity>
-        </View>    
+        <View style={styles.mainView}>
+            <View style={styles.viewNewComment}>
+                <TextInput style={styles.inputNewComment}
+                    placeholder={"Inserisci un commento"}
+                    value={props.text}
+                    onChangeText={props.setText}
+                    multiline={true}
+                />
+            </View>
+            {props.text && props.text.length > 0 ?
+            <View style={styles.viewIconSend}>
+                <TouchableOpacity onPress={props.send}>
+                    <MaterialCommunityIcons style={styles.iconSend} name="send" size={30}/>
+                </TouchableOpacity>
+            </View> : null}
+        </View>   
     );
 }
 
 
 const styles = StyleSheet.create({
+    mainView: {
+        flexDirection: 'row', 
+        justifyContent: 'center', 
+        paddingBottom: 3, 
+        paddingLeft: 5, 
+        paddingRight: 5
+    },
     iconSend: {
         paddingLeft: 5,
         color: "gray",
+        paddingBottom: 5,
         paddingTop: 16
     },
     inputNewComment: {
-        height: "auto", 
-        width: "90%", 
-        fontSize: 25, 
-        padding: 20,
-        marginTop: 5, 
+        maxHeight: (screenHeight/6),
+        height: "auto",
+        textAlignVertical: 'center',
+        fontSize: 18,
+        paddingLeft: 15,
+        paddingBottom: 7,
         borderWidth: 1,
-        borderRadius: 20,
+        borderRadius: 10,
         borderColor: "gray"
     },
     viewNewComment: {
-        flexDirection: "row", 
-        paddingLeft: 10
+        flex: 2,
+        justifyContent: 'flex-end',
+        paddingBottom: 5
+    },
+    viewIconSend: {
+        flex: 0.2, 
+        justifyContent: 'flex-end'
     }
 });
