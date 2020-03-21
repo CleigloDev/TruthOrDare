@@ -46,6 +46,7 @@ export default function Post({ navigation }) {
                     placeholder={"Scrivi qualcosa di carino.."}
                     value={newPost}
                     onChangeText={setNewPost}
+                    autoFocus={true}
                     multiline={true}
                 />
             </View>
