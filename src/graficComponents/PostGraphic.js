@@ -24,11 +24,12 @@ export default function PostGraphic(props) {
             <TouchableOpacity onPress={props.navigate}>
                 <Text style={styles.textContent}>{props.text}</Text>
             </TouchableOpacity>
-            <View style={{alignItems: 'flex-end'}}>
-                <TouchableOpacity onPress={props.chat}>
-                    <MaterialCommunityIcons name="message-reply" size={20}/>
-                </TouchableOpacity>
-            </View>
+            {props.uidCreator === props.uidCurrent ? <></> :
+                <View style={{alignItems: 'flex-end'}}>
+                    <TouchableOpacity onPress={props.chat}>
+                        <MaterialCommunityIcons name="message-reply" size={20}/>
+                    </TouchableOpacity>
+                </View>}
         </View>
     );
 }

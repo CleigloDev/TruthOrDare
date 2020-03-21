@@ -33,6 +33,7 @@ export default function Post({ navigation }) {
         }).catch(() => {
             setShowBusy(false);
         });
+
         return () => {
             snapShotPost();
         };
@@ -75,9 +76,16 @@ export default function Post({ navigation }) {
         navigation.navigate("SavedPosts");
     };
 
+    _navigateChat = (sUIDCreator) => {
+        navigation.navigate("Chat", {
+            uidCreator: sUIDCreator
+        });
+    };
+
     _renderItemPost = ({item, index}) => {
         return (
-            <PostGraphic text={item.data.text} location={"Roma"}
+            <PostGraphic text={item.data.text} location={"Roma"} chat={_navigateChat.bind(this, item.data.uid)}
+                uidCreator={item.data.uid} uidCurrent={uid}
                 navigate={_navigateDetail.bind(this, item)}>
                     <ToolTipPost uidCreator={item.data.uid} uidCurrent={uid}
                         delete={_deletePost.bind(this, item.id)} 
@@ -104,7 +112,7 @@ export default function Post({ navigation }) {
             <View style={{...styles.viewFlex, ...styles.viewShadow}}>
                 <TabBar centerAction={() => {navigation.navigate("NewPost")}} leftAction={() => {}} rightAction={_navigateSave}/>
             </View>
-            {showBusy && <BusyIndicator text={"Creazione commento..."} showBusy={showBusy}/>}
+            {showBusy && <BusyIndicator text={"Caricamento..."} showBusy={showBusy}/>}
         </SafeAreaView>
     );
 }

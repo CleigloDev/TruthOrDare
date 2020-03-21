@@ -16,12 +16,12 @@ const StackLogin = createStackNavigator();
 
 function MainStack() {
   return (
-    <Stack.Navigator initialRouteName="Messaging" headerMode="none">
+    <Stack.Navigator initialRouteName="Home" headerMode="none">
       <Stack.Screen name="Home" component={Post}/>
       <Stack.Screen name="NewPost" component={NewPost}/>
       <Stack.Screen name="PostDetail" component={PostDetail}/>
       <Stack.Screen name="SavedPosts" component={SavedPosts}/>
-      <Stack.Screen name="Messaging" component={Messaging}/>
+      <Stack.Screen name="Chat" component={Messaging}/>
     </Stack.Navigator>
   );
 }

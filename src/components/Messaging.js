@@ -13,8 +13,9 @@ firebase.firestore().settings({
     persistence: true
 });
 
-export default function Login({ navigation }) {
+export default function Login({ route, navigation }) {
     const [uid, setUID] = useState("");
+    const [uidOther, setOtherUID] = useState("");
     const [convMessages, setMessages] = useState([]);
     const [showBusy, setShowBusy] = useState(true);
     const firebaseRef = firebase.firestore();
@@ -23,22 +24,32 @@ export default function Login({ navigation }) {
         var snapShotMessages;
         setShowBusy(true);
         UserManager.getCurrentUID(navigation).then(sUID => {
+            const { uidCreator } = route.params;
+            setOtherUID(uidCreator);
             setUID(sUID);
             snapShotMessages = _snapshotMessages();
             setShowBusy(false);
         }).catch(() => {
             setShowBusy(false);
         });
+
+        return () => {
+            snapShotMessages();
+        }
     }, []);
 
     _onSend = messages => {
         messages[0].user.avatar = null;
-        firebaseRef.collection("chats").doc(uid+"|"+uid)
+        firebaseRef.collection("chats").doc(_chatDoc())
             .collection("messages").doc(messages[0]._id).set(messages[0]);
     };
 
+    _chatDoc = () => {
+        return uid > uidOther ? uid+"|"+ uidOther : uidOther+"|"+ uid;
+    };
+
     _snapshotMessages = () => {
-        return firebaseRef.collection("chats").doc(uid+"|"+uid).collection("messages")
+        return firebaseRef.collection("chats").doc(_chatDoc()).collection("messages")
             .orderBy("createdAt", "desc").onSnapshot(_loadMessages);
     };
 
