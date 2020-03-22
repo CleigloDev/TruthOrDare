@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, StatusBar, FlatList, TouchableOpacity, View, Text} from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {SafeAreaView, StyleSheet, StatusBar, FlatList} from 'react-native';
 import 'react-native-gesture-handler';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
 
-import fontSize from '../modules/fontSize';
+import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';
 import PostGraphic from '../graficComponents/PostGraphic';
 import ToolTipPost from '../graficComponents/ToolTipPostGraphic';
 import NoPost from '../graficComponents/NoPostGraphic';
@@ -20,6 +19,7 @@ firebase.firestore().settings({
 export default function SavedPost({ navigation }) {
     const [uid, setUID] = useState("");
     const [posts , setPosts] = useState([]);
+    const [showBusy, setShowBusy] = useState(true);
     const firebaseRef = firebase.firestore();
 
     useEffect(() => {
@@ -28,7 +28,7 @@ export default function SavedPost({ navigation }) {
             setUID(sUID);
             snapShotPost = _snapshotPosts();
         }).catch(() => {
-            //setShowBusy(false);
+            setShowBusy(false);
         });
         return () => {
             snapShotPost();
@@ -57,6 +57,7 @@ export default function SavedPost({ navigation }) {
             }
         });
         setPosts(aDocData);
+        setShowBusy(false);
     };
 
     _navigateDetail = (item) => {
@@ -86,6 +87,7 @@ export default function SavedPost({ navigation }) {
                     renderItem={_renderItemPost}
                 />
             : <NoPost text={"Nessun post salvato!"}/>}
+            {showBusy && <BusyIndicator text={"Caricamento..."} showBusy={showBusy}/>}
         </SafeAreaView>
     );
 }
