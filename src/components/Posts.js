@@ -62,15 +62,19 @@ export default function Post({ navigation }) {
     };
 
     _showNotification = (oDoc) => {
-        const oUserData = oDoc.data();
-        var oMetadata = oDoc.metadata;
-        let bNewMessages = incomingMessages !== oUserData.incomingMessage;
-        if(oUserData && oMetadata && !oMetadata.fromCache && oUserData.incomingMessage && bNewMessages){
-            setShowNotification(true);
-            setIncomingMessages(oUserData.incomingMessage);
+        if(oDoc.data()){
+            const oUserData = oDoc.data();
+            var oMetadata = oDoc.metadata;
+            let bNewMessages = incomingMessages !== oUserData.incomingMessage;
+            if(oUserData && oMetadata && !oMetadata.fromCache && oUserData.incomingMessage && bNewMessages){
+                setShowNotification(true);
+                setIncomingMessages(oUserData.incomingMessage);
+            }else{
+                setShowNotification(false);
+                setIncomingMessages(oUserData.incomingMessage);
+            }
         }else{
             setShowNotification(false);
-            setIncomingMessages(oUserData.incomingMessage);
         }
     };
 
