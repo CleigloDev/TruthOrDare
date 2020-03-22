@@ -24,12 +24,12 @@ const styles = StyleSheet.create({
         paddingBottom: 30
     },
     viewContent:{
-        height: "auto", 
+        backgroundColor: '#F0F0F0',
         borderWidth: 1,
-        borderRadius: 5,
+        borderRadius: 20,
         borderColor: "#d1d1d1",
-        padding: 10,
-        marginBottom: 10
+        margin: 5,
+        padding: 10
     },
     flexRow: {
         flexDirection: "row"
