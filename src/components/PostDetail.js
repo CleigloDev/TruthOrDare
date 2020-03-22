@@ -5,6 +5,7 @@ import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
 
+import fontSize from '../modules/fontSize';
 import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';
 import ToolTipPost from '../graficComponents/ToolTipPostGraphic';
 import NewMessageGraphic from '../graficComponents/NewMessageGraphic';
@@ -34,7 +35,6 @@ export default function Post({ route, navigation }) {
             const { postKey } = route.params;
             _loadPosts(postKey);
             snapshotComments = _snapshotComments(postKey);
-            setShowBusy(false);
         }).catch(() => {
             setShowBusy(false);
         });
@@ -51,6 +51,7 @@ export default function Post({ route, navigation }) {
             postData.id = oPost.id;
             oPost.data && setPost(postData);
             setPostID(postKey);
+            setShowBusy(false);
         }).catch((oErr) => {
             alert("Impossibile caricare i post! Riprovare");
         });

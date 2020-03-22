@@ -4,6 +4,7 @@ import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
 
+import fontSize from '../modules/fontSize';
 import AsyncText from '../AsyncComponents/AsyncText';
 
 firebase.firestore().settings({
@@ -50,11 +51,11 @@ const styles = StyleSheet.create({
     textHeader: {
         paddingTop: 10, 
         paddingLeft: 10, 
-        fontSize: 13
+        fontSize: fontSize(13)
     },
     textAsync: {
         padding: 20, 
         flexShrink: 1, 
-        fontSize: 17
+        fontSize: fontSize(17)
     }
 });

@@ -5,6 +5,7 @@ import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
 
+import fontSize from '../modules/fontSize';
 import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';
 import { UserManager } from '../modules/UserManager.js';
 

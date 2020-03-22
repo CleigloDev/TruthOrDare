@@ -6,6 +6,7 @@ import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
 
+import fontSize from '../modules/fontSize';
 import PostGraphic from '../graficComponents/PostGraphic';
 import ToolTipPost from '../graficComponents/ToolTipPostGraphic';
 import NoPost from '../graficComponents/NoPostGraphic';

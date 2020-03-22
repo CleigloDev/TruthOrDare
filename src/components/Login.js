@@ -4,6 +4,7 @@ import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
 
+import fontSize from '../modules/fontSize';
 import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';
 import { UserManager } from '../modules/UserManager.js';
 
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
         width: 100
     },
     text: {
-        fontSize: 25, 
+        fontSize: fontSize(25), 
         padding: 20, 
         fontWeight: 'bold'
     }

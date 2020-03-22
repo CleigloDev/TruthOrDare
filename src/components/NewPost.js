@@ -7,6 +7,7 @@ import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
 import { TouchableOpacity, TextInput } from 'react-native-gesture-handler';
 
+import fontSize from '../modules/fontSize';
 import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';
 import { UserManager } from '../modules/UserManager.js';
 
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
     textInput: {
         padding: 10, 
         paddingTop: 30, 
-        fontSize: 30
+        fontSize: fontSize(30)
     },
     viewTextInput: {
         flex: 7, 
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
         paddingRight: 5
     },
     textButton: {
-        fontSize: 20, 
+        fontSize: fontSize(20), 
         marginBottom: 3, 
         paddingLeft: 5
     }

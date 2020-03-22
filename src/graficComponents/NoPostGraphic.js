@@ -1,5 +1,7 @@
 import React from 'react';
-import {StyleSheet, View, Text, ActivityIndicator} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
+
+import fontSize from '../modules/fontSize';
 
 export default function NoPost(props) {
     return (
@@ -19,7 +21,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     textNoPost: {
-        fontSize: 20, 
+        fontSize: fontSize(20), 
         flexShrink: 1 
     }
 });

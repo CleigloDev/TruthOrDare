@@ -2,6 +2,8 @@ import React from 'react';
 import {StyleSheet, View, TextInput, TouchableOpacity, Dimensions, Platform} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import fontSize from '../modules/fontSize';
+
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 
 export default function NewMessageFooter(props) {
@@ -45,7 +47,7 @@ const styles = StyleSheet.create({
         maxHeight: (screenHeight/6),
         height: "auto",
         textAlignVertical: 'center',
-        fontSize: 18,
+        fontSize: fontSize(18),
         paddingLeft: 15,
         paddingBottom: 7,
         borderWidth: 1,

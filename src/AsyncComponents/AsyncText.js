@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Text} from 'react-native';
 
+import fontSize from '../modules/fontSize';
+
 export default function AsyncText(props) {
     const [text, setText] = useState("");
 

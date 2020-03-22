@@ -2,6 +2,8 @@ import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import fontSize from '../modules/fontSize';
+
 export default function CommentGraphic(props) {
 
     return (
@@ -18,7 +20,7 @@ export default function CommentGraphic(props) {
 const styles = StyleSheet.create({
     textContent: {
         flexShrink: 1, 
-        fontSize: 20,
+        fontSize: fontSize(20),
         paddingBottom: 30
     },
     viewContent:{
@@ -33,7 +35,7 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     },
     textLocation: {
-        fontSize: 13, 
+        fontSize: fontSize(13), 
         paddingBottom: 10
     }
 });

@@ -4,6 +4,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { Tooltip } from 'react-native-elements';
 
+import fontSize from '../modules/fontSize';
 
 export default function PostGraphic(props) {
     const refTooltip = useRef(null);
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     },
     textContent: {
         flexShrink: 1, 
-        fontSize: 20,
+        fontSize: fontSize(20),
         paddingBottom: 30
     },
     viewContent:{
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     },
     textLocation: {
-        fontSize: 13, 
+        fontSize: fontSize(13), 
         paddingBottom: 10
     },
     tooltip: {
