@@ -21,20 +21,25 @@ export default function Post({ navigation }) {
     const [uid, setUID] = useState("");
     const [posts , setPosts] = useState([]);
     const [showBusy, setShowBusy] = useState(true);
+    const [showNotification, setShowNotification] = useState(false);
+    const [incomingMessages, setIncomingMessages] = useState(0);
     const firebaseRef = firebase.firestore();
 
     useEffect(() => {
-        var snapShotPost;
+        let snapShotPost;
+        let snapShotChatUser;
         setShowBusy(true);
         UserManager.getCurrentUID(navigation).then(sUID => {
             setUID(sUID);
             snapShotPost = _snapshotPosts();
+            snapShotChatUser = _snapshotChatUser();
         }).catch(() => {
             setShowBusy(false);
         });
 
         return () => {
             snapShotPost();
+            snapShotChatUser();
         };
     }, []);
 
@@ -49,6 +54,24 @@ export default function Post({ navigation }) {
 
     _snapshotPosts = () => {
         return firebaseRef.collection("posts").orderBy("date", "desc").onSnapshot(_loadPosts);
+    };
+
+    _snapshotChatUser = () => {
+        return firebaseRef.collection("users").doc(uid).onSnapshot({ includeMetadataChanges: true }, 
+            _showNotification);
+    };
+
+    _showNotification = (oDoc) => {
+        const oUserData = oDoc.data();
+        var oMetadata = oDoc.metadata;
+        let bNewMessages = incomingMessages !== oUserData.incomingMessage;
+        if(oUserData && oMetadata && !oMetadata.fromCache && oUserData.incomingMessage && bNewMessages){
+            setShowNotification(true);
+            setIncomingMessages(oUserData.incomingMessage);
+        }else{
+            setShowNotification(false);
+            setIncomingMessages(oUserData.incomingMessage);
+        }
     };
 
     _loadPosts = (aDocuments) => {
@@ -83,6 +106,7 @@ export default function Post({ navigation }) {
     };
 
     _navigateMessagesList = () => {
+        setShowNotification(false);
         navigation.navigate("MessageList");
     };
 
@@ -115,7 +139,7 @@ export default function Post({ navigation }) {
             </View>
             <View style={{...styles.viewFlex, ...styles.viewShadow}}>
                 <TabBar centerAction={() => {navigation.navigate("NewPost")}} 
-                    leftAction={_navigateMessagesList}
+                    leftAction={_navigateMessagesList} showNotificationLeft={showNotification}
                     rightAction={_navigateSave}/>
             </View>
             {showBusy && <BusyIndicator text={"Caricamento..."} showBusy={showBusy}/>}

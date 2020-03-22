@@ -39,7 +39,8 @@ export default function Messaging({ route, navigation }) {
     }, []);
 
     _onSend = messages => {
-        if(convMessages.length === 0) _createChatIntoUser();
+        /*if(convMessages.length === 0)*/
+        _createChatIntoUser();
         messages[0].user.avatar = null;
         firebaseRef.collection("chats").doc(_chatDoc())
             .collection("messages").doc(messages[0]._id).set(messages[0]);
@@ -57,12 +58,21 @@ export default function Messaging({ route, navigation }) {
             if(oDoc.data() && oDoc.data().chats){
                 let chats = oDoc.data().chats;
                 let foundChat = chats.find(chatId => chatId === chatDoc);
+                let oUserUpdate = oDoc.data();
+                let incomingMessage = oUserUpdate.incomingMessage;
                 if(!foundChat)(
                     chats.push(chatDoc),
-                    firebaseRef.collection("users").doc(sUID).update({...chats, ...oDoc.data()})
+                    oUserUpdate.chats = chats
                 );
+                oUserUpdate = sUID === uidOther ? 
+                    (incomingMessage += 1, {...oUserUpdate, ...{incomingMessage}}) : oUserUpdate;
+                firebaseRef.collection("users").doc(sUID).update(oUserUpdate)
             }else{
-                firebaseRef.collection("users").doc(sUID).set({chats: [chatDoc]});
+                let incomingMessage;
+                let oUserUpdate = {chats: [chatDoc]};
+                oUserUpdate = sUID === uidOther ? 
+                    (incomingMessage = 1, {...oUserUpdate, ...{incomingMessage}}) : oUserUpdate;
+                firebaseRef.collection("users").doc(sUID).set(oUserUpdate);
             }
         });
     };

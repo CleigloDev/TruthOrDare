@@ -9,6 +9,9 @@ export default function TabBar(props) {
             <View style={styles.mainView}>
                 <View style={styles.viewWrapper}>
                     <TouchableOpacity onPress={props.leftAction} style={styles.buttonAdd}>
+                        {props.showNotificationLeft ?
+                            <View style={{backgroundColor: 'red', height: 10, width: 10, 
+                            position: 'absolute', left: 20, bottom: 45, borderRadius: 30}}/> : <></>}
                         <Ionicons name="logo-snapchat" size={30}/>
                         <Text>Ghost Chat</Text>
                     </TouchableOpacity>
