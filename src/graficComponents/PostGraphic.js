@@ -25,12 +25,21 @@ export default function PostGraphic(props) {
             <TouchableOpacity onPress={props.navigate}>
                 <Text style={styles.textContent}>{props.text}</Text>
             </TouchableOpacity>
-            {props.uidCreator === props.uidCurrent ? <></> :
-                <View style={{alignItems: 'flex-end'}}>
-                    <TouchableOpacity onPress={props.chat}>
-                        <MaterialCommunityIcons name="message-reply" size={20}/>
-                    </TouchableOpacity>
-                </View>}
+            <View style={styles.flexRow}>
+                {props.comments === undefined ? <></> :
+                    <View style={{flex: 2}}>
+                        <TouchableOpacity style={styles.flexRow} onPress={props.navigate}>
+                            <MaterialCommunityIcons name="comment-processing" size={22}/>
+                        <Text style={{paddingLeft: 10}}>{props.comments+" Commenti"}</Text>
+                        </TouchableOpacity>
+                    </View>}
+                {props.uidCreator === props.uidCurrent ? <></> :
+                    <View>
+                        <TouchableOpacity onPress={props.chat}>
+                            <MaterialCommunityIcons name="wechat" size={30}/>
+                        </TouchableOpacity>
+                    </View>}
+            </View>
         </View>
     );
 }

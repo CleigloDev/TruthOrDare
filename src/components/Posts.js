@@ -89,7 +89,7 @@ export default function Post({ navigation }) {
     _renderItemPost = ({item, index}) => {
         return (
             <PostGraphic text={item.data.text} location={"Roma"} chat={_navigateChat.bind(this, item.data.uid)}
-                uidCreator={item.data.uid} uidCurrent={uid}
+                uidCreator={item.data.uid} uidCurrent={uid} comments={item.data.comments.length}
                 navigate={_navigateDetail.bind(this, item)}>
                     <ToolTipPost uidCreator={item.data.uid} uidCurrent={uid}
                         delete={_deletePost.bind(this, item.id)} 

@@ -92,6 +92,18 @@ export default function Post({ route, navigation }) {
         });
     };
 
+    _updatePost = () => {
+        firebaseRef.collection("posts").doc(IDPost).get()
+        .then((oDoc) => {
+            let {comments} = oDoc.data();
+            comments.push(uid);
+            firebaseRef.collection("posts").doc(IDPost).update({comments})
+        })
+        .catch(() => {
+
+        });
+    };
+
     _resetPage = () => {
         setNewComment("");
     };
@@ -126,7 +138,7 @@ export default function Post({ route, navigation }) {
                 extraData={comments}
                 renderItem={_renderItemComments}
             />
-            <NewMessageGraphic text={newComment} setText={setNewComment} send={_createComment}/>
+            <NewMessageGraphic text={newComment} setText={setNewComment} send={() => {_createComment(); _updatePost()}}/>
             {showBusy && <BusyIndicator text={"Creazione commento..."} showBusy={showBusy}/>}
         </SafeAreaView>
     );
