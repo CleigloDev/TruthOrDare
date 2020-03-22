@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View, StatusBar, Text, TouchableOpacity, Image, AsyncStorage, FlatList} from 'react-native';
+import {SafeAreaView, StyleSheet, View, StatusBar, FlatList} from 'react-native';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
 
-import fontSize from '../modules/fontSize';
 import NoPost from '../graficComponents/NoPostGraphic';
 import HeaderText from '../graficComponents/HeaderTextGraphic';
 import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';

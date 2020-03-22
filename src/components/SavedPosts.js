@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, StatusBar, FlatList} from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, FlatList, View} from 'react-native';
 import 'react-native-gesture-handler';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
 
+import HeaderText from '../graficComponents/HeaderTextGraphic';
 import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';
 import PostGraphic from '../graficComponents/PostGraphic';
 import ToolTipPost from '../graficComponents/ToolTipPostGraphic';
@@ -80,12 +81,17 @@ export default function SavedPost({ navigation }) {
     return (
         <SafeAreaView style={styles.safeArea}>
             {posts.length > 0 ?
-                <FlatList
-                    keyExtractor={(item, index) => 'key'+index}
-                    data={posts}
-                    extraData={posts}
-                    renderItem={_renderItemPost}
-                />
+                <>
+                    <HeaderText text={"Post salvati"}/>
+                    <View style={{flex: 3}}>
+                        <FlatList
+                            keyExtractor={(item, index) => 'key'+index}
+                            data={posts}
+                            extraData={posts}
+                            renderItem={_renderItemPost}
+                        />
+                    </View>
+                </>
             : <NoPost text={"Nessun post salvato!"}/>}
             {showBusy && <BusyIndicator text={"Caricamento..."} showBusy={showBusy}/>}
         </SafeAreaView>

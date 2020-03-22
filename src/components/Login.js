@@ -14,8 +14,8 @@ export default function Login({ navigation }) {
     useEffect(() => {
         UserManager.getCurrentUID(navigation)
         .then(() => {
-            setShowBusy(false); 
             navigation.navigate("MainStack")
+            setShowBusy(false); 
         })
         .catch(() => {
             setShowBusy(false)
@@ -23,23 +23,26 @@ export default function Login({ navigation }) {
     }, []);
 
     _login = () => {
+        setShowBusy(true); 
         firebase.auth()
         .signInAnonymously()
         .then(oUserInfo => {
             AsyncStorage.setItem("UID", oUserInfo.user.uid);
             navigation.navigate("MainStack");
+            setShowBusy(false); 
         }).catch((error) => {
             alert(error);
+            setShowBusy(false); 
         });
     };
 
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.iconLogin}>
-            <TouchableOpacity style={styles.wrapper} onPress={_login}>
-                <Image source={require('../icons/iconLogin.png')} style={styles.image}/>
-                <Text style={styles.text}>Login Anonimo</Text>
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.wrapper} onPress={_login}>
+                    <Image source={require('../icons/iconLogin.png')} style={styles.image}/>
+                    <Text style={styles.text}>Login Anonimo</Text>
+                </TouchableOpacity>
             </View>
             {showBusy && <BusyIndicator text={"Avvio l'app.."} showBusy={showBusy}/>}
         </SafeAreaView>
