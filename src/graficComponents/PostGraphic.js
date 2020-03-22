@@ -30,7 +30,7 @@ export default function PostGraphic(props) {
                     <View style={{flex: 2}}>
                         <TouchableOpacity style={styles.flexRow} onPress={props.navigate}>
                             <MaterialCommunityIcons name="comment-processing" size={22}/>
-                        <Text style={{paddingLeft: 10}}>{props.comments+" Commenti"}</Text>
+                        <Text style={{paddingLeft: 10}}>{props.comments+" Comment"+(props.comments !== 1?"i":"o")}</Text>
                         </TouchableOpacity>
                     </View>}
                 {props.uidCreator === props.uidCurrent ? <></> :
