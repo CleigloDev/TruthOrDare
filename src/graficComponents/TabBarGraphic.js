@@ -3,7 +3,7 @@ import {StyleSheet, View, Text, ActivityIndicator, TouchableOpacity, Platform} f
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-export default function busyIndicator(props) {
+export default function TabBar(props) {
     return (
         <>
             <View style={styles.mainView}>

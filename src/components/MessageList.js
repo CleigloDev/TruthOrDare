@@ -78,7 +78,7 @@ export default function MessageList({ route, navigation }) {
                         />
                     </View> 
                 </> : <NoPost text={"Ehi sembra non ci sia alcuna chat attiva!"}/>}
-            {showBusy && <BusyIndicator text={"Avvio l'app.."} showBusy={showBusy}/>}
+            {showBusy && <BusyIndicator text={"Caricamento chat..."} showBusy={showBusy}/>}
         </SafeAreaView>
     );
 }

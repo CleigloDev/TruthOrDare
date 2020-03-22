@@ -98,7 +98,7 @@ export default function Messaging({ route, navigation }) {
                 }}
                 onSend={messages => _onSend(messages)}
             />
-            {showBusy && <BusyIndicator text={"Avvio l'app.."} showBusy={showBusy}/>}
+            {showBusy && <BusyIndicator text={"Apertura conversazione..."} showBusy={showBusy}/>}
         </SafeAreaView>
     );
 }

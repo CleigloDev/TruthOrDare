@@ -57,7 +57,7 @@ export default function Post({ navigation }) {
                     <Text style={styles.textButton}>Crea</Text>
                 </View>
             </TouchableOpacity>
-            {showBusy && <BusyIndicator text={"Creazione commento..."} showBusy={showBusy}/>}
+            {showBusy && <BusyIndicator text={"Creazione post..."} showBusy={showBusy}/>}
         </SafeAreaView>
     );
 }
