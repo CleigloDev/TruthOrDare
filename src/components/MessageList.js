@@ -46,8 +46,8 @@ export default function MessageList({ route, navigation }) {
             const aChats = oUserInfo.chats;
             const aChatSet = [...(new Set([...chats,...aChats]))];
             setChats(aChatSet);
-            setShowBusy(false);
         }
+        setShowBusy(false);
     };
 
     _navigateToChat = (chatID) => {
