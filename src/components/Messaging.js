@@ -127,10 +127,9 @@ export default function Messaging({ route, navigation }) {
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={{flex: 1}}>
-                {isWriting ? 
-                    <View style={{alignItems: 'center'}}>
-                        <Text style={{color: 'gray'}}>Sta scrivendo...</Text>
-                    </View> : <></>}
+                    <View style={{flex: 0.1,alignItems: 'center', backgroundColor: '#F9F9F9'}}>
+                        {isWriting ? <Text style={{color: 'gray', paddingTop: 10}}>Sta scrivendo...</Text> : <></>}
+                    </View>
                 <View style={{flex: 2}}>
                     <GiftedChat
                         placeholder={"Scrivi un messaggio..."}
