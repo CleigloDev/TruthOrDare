@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View, StatusBar} from 'react-native';
+import {SafeAreaView, StyleSheet, View, StatusBar, Text} from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat'
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
@@ -18,32 +18,36 @@ export default function Messaging({ route, navigation }) {
     const [uid, setUID] = useState("");
     const [uidOther, setOtherUID] = useState("");
     const [convMessages, setMessages] = useState([]);
+    const [isWriting, setIsWriting] = useState(false);
     const [showBusy, setShowBusy] = useState(true);
     const firebaseRef = firebase.firestore();
 
     useEffect(() => {
         var snapShotMessages;
+        var snapShotIsWriting;
         setShowBusy(true);
         UserManager.getCurrentUID(navigation).then(sUID => {
             const { uidCreator } = route.params;
             setOtherUID(uidCreator);
             setUID(sUID);
             snapShotMessages = _snapshotMessages();
+            snapShotIsWriting = _snapshotIsWriting();
         }).catch(() => {
             setShowBusy(false);
         });
 
         return () => {
             snapShotMessages();
+            snapShotIsWriting();
         }
     }, []);
 
     _onSend = messages => {
-        /*if(convMessages.length === 0)*/
         _createChatIntoUser();
         messages[0].user.avatar = null;
         firebaseRef.collection("chats").doc(_chatDoc())
             .collection("messages").doc(messages[0]._id).set(messages[0]);
+        _setUserIsWriting("");
     };
 
     _createChatIntoUser = () => {
@@ -84,6 +88,21 @@ export default function Messaging({ route, navigation }) {
             .orderBy("createdAt", "desc").onSnapshot(_loadMessages);
     };
 
+    _snapshotIsWriting = () => {
+        return firebaseRef.collection("chats").doc(_chatDoc())
+        .collection("messages").doc("isWriting"+uid).onSnapshot(_setIsWriting);
+    };
+
+    _setUserIsWriting = (text) => {
+        if(text !== ""){
+            firebaseRef.collection("chats").doc(_chatDoc())
+                .collection("messages").doc("isWriting"+uidOther).set({isWriting: true});
+        }else{
+            firebaseRef.collection("chats").doc(_chatDoc())
+                .collection("messages").doc("isWriting"+uidOther).set({isWriting: false});
+        }
+    };
+
     _loadMessages = (aDocuments) => {
         let aNewMessages = [];
         aDocuments.forEach((oDoc) => {
@@ -96,16 +115,34 @@ export default function Messaging({ route, navigation }) {
         setShowBusy(false);
     };
 
+    _setIsWriting = (oDoc) => {
+        const oDocData = oDoc.data();
+        if(oDocData && oDocData.isWriting){
+            setIsWriting(true);
+        }else{
+            setIsWriting(false);
+        }
+    };
+
     return (
         <SafeAreaView style={styles.safeArea}>
-            <GiftedChat
-                placeholder={"Scrivi un messaggio..."}
-                messages={convMessages}
-                user={{
-                    _id: uid
-                }}
-                onSend={messages => _onSend(messages)}
-            />
+            <View style={{flex: 1}}>
+                {isWriting ? 
+                    <View style={{alignItems: 'center'}}>
+                        <Text style={{color: 'gray'}}>Sta scrivendo...</Text>
+                    </View> : <></>}
+                <View style={{flex: 2}}>
+                    <GiftedChat
+                        placeholder={"Scrivi un messaggio..."}
+                        messages={convMessages}
+                        user={{
+                            _id: uid
+                        }}
+                        onInputTextChanged={text => _setUserIsWriting(text)}
+                        onSend={messages => _onSend(messages)}
+                    />
+                </View>
+            </View>
             {showBusy && <BusyIndicator text={"Apertura conversazione..."} showBusy={showBusy}/>}
         </SafeAreaView>
     );
