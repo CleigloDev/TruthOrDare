@@ -142,6 +142,10 @@ export default function Messaging({ route, navigation }) {
                         onSend={messages => _onSend(messages)}
                     />
                 </View>
+                {convMessages.length > 0 ? <></> :
+                    <View style={styles.viewNoMessages}>
+                        <Text style={styles.textNoMessages}>{"Su non essere timido!\nScrivi qualcosa 😉"}</Text>
+                    </View>}
             </View>
             {showBusy && <BusyIndicator text={"Apertura conversazione..."} showBusy={showBusy}/>}
         </SafeAreaView>
@@ -152,5 +156,20 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
         backgroundColor: "white"
+    },
+    textNoMessages: {
+        paddingTop: 50,
+        fontSize: fontSize(20), 
+        flexShrink: 1 
+    },
+    viewNoMessages: {
+        position: 'absolute', 
+        bottom: 0, 
+        right: 0, 
+        left: 0, 
+        top: 0, 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        height: '90%'
     }
 });
