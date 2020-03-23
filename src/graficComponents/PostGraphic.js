@@ -34,7 +34,7 @@ export default function PostGraphic(props) {
                         </TouchableOpacity>
                     </View>}
                 {props.uidCreator === props.uidCurrent ? <></> :
-                    <View>
+                    <View style={{flex: props.comments === undefined ? 1 : 0, alignItems: 'flex-end'}}>
                         <TouchableOpacity onPress={props.chat}>
                             <MaterialCommunityIcons name="wechat" size={30}/>
                         </TouchableOpacity>
