@@ -21,7 +21,7 @@ export default function NewMessageFooter(props) {
             {props.text && props.text.length > 0 ?
             <View style={styles.viewIconSend}>
                 <TouchableOpacity onPress={props.send}>
-                    <MaterialCommunityIcons style={styles.iconSend} name="send" size={33}/>
+                    <MaterialCommunityIcons style={styles.iconSend} name="send" size={30}/>
                 </TouchableOpacity>
             </View> : null}
         </View>   
@@ -34,34 +34,31 @@ const styles = StyleSheet.create({
         flexDirection: 'row', 
         justifyContent: 'center', 
         paddingBottom: 3, 
-        paddingLeft: 5, 
-        paddingRight: 5
+        marginLeft: 5, 
+        marginRight: 5,
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: "gray"
     },
     iconSend: {
-        paddingLeft: 5,
-        color: "gray",
-        paddingBottom: 5,
-        paddingTop: 16
+        marginTop: 5,
+        color: "#1EA6B6",
     },
     inputNewComment: {
         maxHeight: (screenHeight/6),
         height: "auto",
         textAlignVertical: 'center',
+        marginTop: 7,
+        marginBottom: 5,
+        marginLeft: 5,
         fontSize: fontSize(18),
-        paddingLeft: 15,
-        paddingBottom: 7,
-        borderWidth: 1,
-        borderRadius: 10,
-        borderColor: "gray"
     },
     viewNewComment: {
         flex: 2,
         justifyContent: 'flex-end',
-        paddingBottom: 5
     },
     viewIconSend: {
         flex: 0.23, 
         justifyContent: 'flex-end',
-        paddingBottom: Platform.OS === 'ios' ? 0 : 5,
     }
 });
