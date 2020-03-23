@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     textContent: {
         flexShrink: 1, 
         fontSize: fontSize(20),
-        paddingBottom: 30
+        paddingBottom: 10
     },
     viewContent:{
         backgroundColor: '#F0F0F0',
