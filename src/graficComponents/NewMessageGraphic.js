@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     mainView: {
         flexDirection: 'row', 
         justifyContent: 'center', 
-        paddingBottom: 3, 
+        marginBottom: 10, 
         marginLeft: 5, 
         marginRight: 5,
         borderWidth: 1,
@@ -42,14 +42,15 @@ const styles = StyleSheet.create({
     },
     iconSend: {
         marginTop: 5,
+        marginBottom: Platform.OS === "ios" ? 0 : 8,
         color: "#1EA6B6",
     },
     inputNewComment: {
         maxHeight: (screenHeight/6),
         height: "auto",
         textAlignVertical: 'center',
-        marginTop: 7,
-        marginBottom: 5,
+        marginTop: Platform.OS === "ios" ? 7 : 0,
+        marginBottom: Platform.OS === "ios" ? 5 : 0,
         marginLeft: 5,
         fontSize: fontSize(18),
     },
@@ -59,6 +60,7 @@ const styles = StyleSheet.create({
     },
     viewIconSend: {
         flex: 0.23, 
+        alignItems: 'center',
         justifyContent: 'flex-end',
     }
 });

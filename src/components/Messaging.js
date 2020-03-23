@@ -127,8 +127,8 @@ export default function Messaging({ route, navigation }) {
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={{flex: 1}}>
-                    <View style={{flex: 0.1,alignItems: 'center', backgroundColor: '#F9F9F9'}}>
-                        {isWriting ? <Text style={{color: 'gray', paddingTop: 10}}>Sta scrivendo...</Text> : <></>}
+                    <View style={styles.viewWriting}>
+                        {isWriting ? <Text style={styles.textWriting}>Sta scrivendo...</Text> : <></>}
                     </View>
                 <View style={{flex: 2}}>
                     <GiftedChat
@@ -170,5 +170,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center', 
         alignItems: 'center',
         height: '90%'
+    },
+    textWriting: {
+        color: 'gray', 
+        paddingTop: 10
+    },
+    viewWriting: {
+        flex: 0.1,
+        alignItems: 'center', 
+        backgroundColor: '#F9F9F9'
     }
 });
