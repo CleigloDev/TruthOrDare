@@ -22,7 +22,6 @@ export default function Post({ navigation }) {
     const [posts , setPosts] = useState([]);
     const [showBusy, setShowBusy] = useState(true);
     const [showNotification, setShowNotification] = useState(false);
-    const [incomingMessages, setIncomingMessages] = useState(0);
     const firebaseRef = firebase.firestore();
 
     useEffect(() => {
@@ -57,21 +56,17 @@ export default function Post({ navigation }) {
     };
 
     _snapshotChatUser = () => {
-        return firebaseRef.collection("users").doc(uid).onSnapshot({ includeMetadataChanges: true }, 
-            _showNotification);
+        return firebaseRef.collection("users").doc(uid).onSnapshot(_showNotification);
     };
 
     _showNotification = (oDoc) => {
         if(oDoc.data()){
             const oUserData = oDoc.data();
             var oMetadata = oDoc.metadata;
-            let bNewMessages = incomingMessages !== oUserData.incomingMessage;
-            if(oUserData && oMetadata && !oMetadata.fromCache && oUserData.incomingMessage && bNewMessages){
+            if(oUserData && oMetadata && !oMetadata.fromCache && oUserData.showIncomingMessages){
                 setShowNotification(true);
-                setIncomingMessages(oUserData.incomingMessage);
             }else{
                 setShowNotification(false);
-                setIncomingMessages(oUserData.incomingMessage);
             }
         }else{
             setShowNotification(false);
@@ -110,7 +105,7 @@ export default function Post({ navigation }) {
     };
 
     _navigateMessagesList = () => {
-        setShowNotification(false);
+        firebaseRef.collection("users").doc(uid).update({showIncomingMessages: false});
         navigation.navigate("MessageList");
     };
 

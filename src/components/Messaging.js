@@ -59,19 +59,17 @@ export default function Messaging({ route, navigation }) {
                 let chats = oDoc.data().chats;
                 let foundChat = chats.find(chatId => chatId === chatDoc);
                 let oUserUpdate = oDoc.data();
-                let incomingMessage = oUserUpdate.incomingMessage;
                 if(!foundChat)(
                     chats.push(chatDoc),
                     oUserUpdate.chats = chats
                 );
                 oUserUpdate = sUID === uidOther ? 
-                    (incomingMessage += 1, {...oUserUpdate, ...{incomingMessage}}) : oUserUpdate;
+                    {...oUserUpdate, ...{showIncomingMessages: true}} : oUserUpdate;
                 firebaseRef.collection("users").doc(sUID).update(oUserUpdate)
             }else{
-                let incomingMessage;
                 let oUserUpdate = {chats: [chatDoc]};
                 oUserUpdate = sUID === uidOther ? 
-                    (incomingMessage = 1, {...oUserUpdate, ...{incomingMessage}}) : oUserUpdate;
+                    {...oUserUpdate, ...{showIncomingMessages: true}} : oUserUpdate;
                 firebaseRef.collection("users").doc(sUID).set(oUserUpdate);
             }
         });
