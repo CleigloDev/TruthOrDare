@@ -9,8 +9,9 @@ export default function AsyncText(props) {
     useEffect(() => {
         props.textPromise
         .then((oDoc) => {
-            const textMessage = oDoc.docs[0]?.data()?.text
-            setText(textMessage);
+            const text = props.fnProcessText(oDoc);
+
+            setText(text);
         })
         .catch(() => {
             setText("Caricamento testo fallito!");

@@ -20,13 +20,24 @@ export default function MessageListItem(props) {
             .orderBy("createdAt", "desc").limit(1).get();
     };
 
+    _processText = (oDoc) => {
+        const textMessage = oDoc.docs[0]?.data()?.text
+        const sImageURL = oDoc.docs[0]?.data()?.image
+        if(sImageURL && sImageURL !== "" && textMessage === ""){
+            return "Sarà l'ennesimo meme?😏"
+        }else{
+            return textMessage;
+        }
+    };
+
     return (
         <>
             <TouchableOpacity style={styles.viewWrapper} 
                 onPress={props.navigateToChat.bind(this, props.chatID)}>
                     <View>
                         <Text style={styles.textHeader}>Ultimo messaggio:</Text>
-                        <AsyncText style={styles.textAsync} textPromise={_getLastMessage()} maxLength={33}/>
+                        <AsyncText style={styles.textAsync} fnProcessText={_processText}
+                            textPromise={_getLastMessage()} maxLength={33}/>
                         {//TODO: add Date for new Messages
                         /*<View style={{alignItems: 'flex-end'}}>
                             <Text style={{paddingRight: 15, paddingBottom: 5}}>Ciao</Text>
