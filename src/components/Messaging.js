@@ -1,9 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View, StatusBar, Text} from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat'
+import {SafeAreaView, StyleSheet, View, StatusBar, Text, TouchableOpacity} from 'react-native';
+import { GiftedChat } from 'react-native-gifted-chat';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import ImagePicker from 'react-native-image-crop-picker';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
+import '@react-native-firebase/storage';
 
 import fontSize from '../modules/fontSize';
 import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';
@@ -124,28 +127,89 @@ export default function Messaging({ route, navigation }) {
         }
     };
 
+    _openImageSelection = () => {
+        ImagePicker.openPicker({
+            compressImageQuality: 0.5,
+            cropping: true
+        }).then(oImageInfo => {
+            const oNewMessageImage = [_createMessage(oImageInfo)];
+            const aPrintableMessages = GiftedChat.append(convMessages, oNewMessageImage);
+            setMessages(aPrintableMessages);
+
+            _uploadImageToFirebase(oImageInfo, oNewMessageImage);
+        });
+    };
+
+    _uploadImageToFirebase = (oImageInfo, oNewMessage) =>{
+        const sChatID = firebase.auth().currentUser._user.uid;
+        const oDate = new Date();
+        const filename = oImageInfo.filename+oDate.toISOString();
+        firebase
+        .storage()
+        .ref(`chats/${sChatID}/${filename}`)
+        .putFile(oImageInfo.path)
+        .on(
+            firebase.storage.TaskEvent.STATE_CHANGED,
+            snapshot => {
+                let state = {};
+                state = {
+                ...state,
+                progress: (snapshot.bytesTransferred / snapshot.totalBytes) * 100 // Calculate progress percentage
+                };
+                if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
+                    snapshot.ref.getDownloadURL().then(sImageURL => {
+                        oNewMessage[0].image = sImageURL;
+                        _onSend(oNewMessage);
+                    });
+                }
+            },
+            error => {
+                alert("Ops caricament immagine fallito, riprova!");
+            }
+        );
+    };
+
+    _createMessage = (oImageInfo) => {
+        const oDate = new Date();
+        let oMessage = {
+            _id: oImageInfo.filename+oDate.toISOString(),
+            text: '',
+            createdAt: new Date(),
+            user: {
+                _id: uid,
+            },
+            image: oImageInfo.path,
+        };
+        return oMessage;
+    };
+
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={{flex: 1}}>
+                <View style={styles.viewHeader}>
                     <View style={styles.viewWriting}>
                         {isWriting ? <Text style={styles.textWriting}>Sta scrivendo...</Text> : <></>}
                     </View>
-                <View style={{flex: 2}}>
-                    <GiftedChat
-                        placeholder={"Scrivi un messaggio..."}
-                        messages={convMessages}
-                        user={{
-                            _id: uid
-                        }}
-                        onInputTextChanged={text => _setUserIsWriting(text)}
-                        onSend={messages => _onSend(messages)}
-                    />
+                    <View style={styles.viewAddImage}>
+                        <TouchableOpacity onPress={_openImageSelection}>
+                            <MaterialIcons name="add-a-photo" size={30}/>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                {convMessages.length > 0 ? <></> :
-                    <View style={styles.viewNoMessages}>
-                        <Text style={styles.textNoMessages}>{"Su non essere timido!\nScrivi qualcosa 😉"}</Text>
-                    </View>}
+                <GiftedChat
+                    placeholder={"Scrivi un messaggio..."}
+                    messages={convMessages}
+                    user={{
+                        _id: uid
+                    }}
+                    onInputTextChanged={text => _setUserIsWriting(text)}
+                    onSend={messages => _onSend(messages)}
+                />
             </View>
+            {convMessages.length > 0 ? <></> :
+                <View style={styles.viewNoMessages}>
+                    <Text style={styles.textNoMessages}>{"Su non essere timido!\nScrivi qualcosa 😉"}</Text>
+                </View>}
             {showBusy && <BusyIndicator text={"Apertura conversazione..."} showBusy={showBusy}/>}
         </SafeAreaView>
     );
@@ -175,9 +239,22 @@ const styles = StyleSheet.create({
         color: 'gray', 
         paddingTop: 10
     },
-    viewWriting: {
-        flex: 0.1,
-        alignItems: 'center', 
+    viewAddImage: {
+        marginTop: 5, 
+        position: 'absolute', 
+        top: 0, 
+        right: 10
+    },
+    viewHeader: {
+        flexDirection: 'row',
+        position: 'absolute',
+        height: 40,
+        left: 0,
+        right: 0,
+        top: 0,
+        zIndex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#F9F9F9'
     }
 });
