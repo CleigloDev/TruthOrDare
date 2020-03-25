@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, View, StatusBar, Text, TouchableOpacity} from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ImagePicker from 'react-native-image-crop-picker';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
@@ -119,6 +120,11 @@ export default function Messaging({ route, navigation }) {
         const aPrintableMessages = GiftedChat.append(convMessages, aNewMessages);
         setMessages(aPrintableMessages);
         setShowBusy(false);
+        _setReadMessage();
+    };
+
+    _setReadMessage = () => {
+        firebaseRef.collection("users").doc(uid).update({showIncomingMessages: false});
     };
 
     _setIsWriting = (oDoc) => {
@@ -140,7 +146,7 @@ export default function Messaging({ route, navigation }) {
     };
 
     _sendMessageImage = () => {
-        const oNewMessageImage = [_createMessage(imageURL)];
+        const oNewMessageImage = [_createMessageImage(imageURL)];
         const aPrintableMessages = GiftedChat.append(convMessages, oNewMessageImage);
         setMessages(aPrintableMessages);
         setImageURL("");
@@ -178,7 +184,7 @@ export default function Messaging({ route, navigation }) {
         );
     };
 
-    _createMessage = (oImageInfo) => {
+    _createMessageImage = (oImageInfo) => {
         const oDate = new Date();
         let oMessage = {
             _id: oImageInfo.filename+oDate.toISOString(),
@@ -190,6 +196,21 @@ export default function Messaging({ route, navigation }) {
             image: oImageInfo.path,
         };
         return oMessage;
+    };
+
+    _createMessageText = (refChat) => {
+        const oDate = new Date();
+        let oMessage = {
+            _id: refChat.messageIdGenerator()+oDate.toISOString(),
+            text: refChat.text,
+            createdAt: new Date(),
+            user: {
+                _id: uid,
+            }
+        };
+
+        _onSend([oMessage]);
+        setNewTextImage("");
     };
 
     _unselectImage = () => {
@@ -212,9 +233,17 @@ export default function Messaging({ route, navigation }) {
                 </View>
                 <GiftedChat
                     placeholder={"Scrivi un messaggio..."}
+                    text={newTextImage}
+                    textInputProps={{onChangeText:setNewTextImage}}
                     messages={convMessages}
                     user={{
                         _id: uid
+                    }}
+                    renderSend={(refChat) => {
+                        return refChat.text === "" ? <></> :
+                            <TouchableOpacity onPress={_createMessageText.bind(this, refChat)}> 
+                                <MaterialCommunityIcons style={styles.iconSend} name="send" size={30}/>
+                            </TouchableOpacity>;
                     }}
                     onInputTextChanged={text => _setUserIsWriting(text)}
                     onSend={messages => _onSend(messages)}
@@ -272,5 +301,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#F9F9F9'
+    },
+    iconSend: {
+        marginLeft: 5, 
+        marginRight: 7,
+        marginBottom: Platform.OS === "ios" ? 5 : 8,
+        color: "#1EA6B6",
     }
 });
