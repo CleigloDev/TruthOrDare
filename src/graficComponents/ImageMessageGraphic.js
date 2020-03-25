@@ -15,6 +15,7 @@ export default function ImageMessage(props) {
                 <View style={styles.viewNewMessage}>
                     <NewMessageGraphic text={props.newTextImage} setText={props.setNewTextImage} 
                         styles={styles.newMessageText}
+                        showButton={true}
                         send={() => {props.sendMessageImage()}}/>
                 </View>
             </View>

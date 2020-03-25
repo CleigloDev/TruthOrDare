@@ -18,12 +18,12 @@ export default function NewMessageFooter(props) {
                     multiline={true}
                 />
             </View>
-            {props.text && props.text.length > 0 ?
-            <View style={styles.viewIconSend}>
-                <TouchableOpacity onPress={props.send}>
-                    <MaterialCommunityIcons style={styles.iconSend} name="send" size={30}/>
-                </TouchableOpacity>
-            </View> : null}
+            {(props.text && props.text.length > 0 || props.showButton ) ?
+                <View style={styles.viewIconSend}>
+                    <TouchableOpacity onPress={props.send}>
+                        <MaterialCommunityIcons style={styles.iconSend} name="send" size={30}/>
+                    </TouchableOpacity>
+                </View> : null}
         </View>   
     );
 }

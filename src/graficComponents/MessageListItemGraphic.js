@@ -23,8 +23,9 @@ export default function MessageListItem(props) {
     _processText = (oDoc) => {
         const textMessage = oDoc.docs[0]?.data()?.text
         const sImageURL = oDoc.docs[0]?.data()?.image
+        const uidSender = oDoc.docs[0]?.data()?.user._id;
         if(sImageURL && sImageURL !== "" && textMessage === ""){
-            return "Sarà l'ennesimo meme?😏"
+            return uidSender === props.currentUID ? "Hai inviato un immagine" : "Sarà l'ennesimo meme?😏";
         }else{
             return textMessage;
         }

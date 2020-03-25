@@ -60,7 +60,7 @@ export default function MessageList({ route, navigation }) {
 
     _renderChatItem = ({item, index}) => {
         return (
-            <MessageListItem navigateToChat={_navigateToChat.bind(this, item)} chatID={item}/>
+            <MessageListItem currentUID={uid} navigateToChat={_navigateToChat.bind(this, item)} chatID={item}/>
         );
     };
 
