@@ -8,6 +8,7 @@ import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
 import '@react-native-firebase/storage';
 
+import ImageMessageGraphic from '../graficComponents/ImageMessageGraphic';
 import fontSize from '../modules/fontSize';
 import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';
 import { UserManager } from '../modules/UserManager.js';
@@ -23,6 +24,8 @@ export default function Messaging({ route, navigation }) {
     const [convMessages, setMessages] = useState([]);
     const [isWriting, setIsWriting] = useState(false);
     const [showBusy, setShowBusy] = useState(true);
+    const [imageURL, setImageURL] = useState("");
+    const [newTextImage, setNewTextImage] = useState("");
     const firebaseRef = firebase.firestore();
 
     useEffect(() => {
@@ -129,15 +132,21 @@ export default function Messaging({ route, navigation }) {
 
     _openImageSelection = () => {
         ImagePicker.openPicker({
-            compressImageQuality: 0.5,
+            compressImageQuality: 0.8,
             cropping: true
         }).then(oImageInfo => {
-            const oNewMessageImage = [_createMessage(oImageInfo)];
-            const aPrintableMessages = GiftedChat.append(convMessages, oNewMessageImage);
-            setMessages(aPrintableMessages);
-
-            _uploadImageToFirebase(oImageInfo, oNewMessageImage);
+            setImageURL(oImageInfo);
         });
+    };
+
+    _sendMessageImage = () => {
+        const oNewMessageImage = [_createMessage(imageURL)];
+        const aPrintableMessages = GiftedChat.append(convMessages, oNewMessageImage);
+        setMessages(aPrintableMessages);
+        setImageURL("");
+        setNewTextImage("");
+
+        _uploadImageToFirebase(imageURL, oNewMessageImage);
     };
 
     _uploadImageToFirebase = (oImageInfo, oNewMessage) =>{
@@ -173,7 +182,7 @@ export default function Messaging({ route, navigation }) {
         const oDate = new Date();
         let oMessage = {
             _id: oImageInfo.filename+oDate.toISOString(),
-            text: '',
+            text: newTextImage,
             createdAt: new Date(),
             user: {
                 _id: uid,
@@ -181,6 +190,11 @@ export default function Messaging({ route, navigation }) {
             image: oImageInfo.path,
         };
         return oMessage;
+    };
+
+    _unselectImage = () => {
+        setImageURL("");
+        setNewTextImage("");
     };
 
     return (
@@ -205,6 +219,8 @@ export default function Messaging({ route, navigation }) {
                     onInputTextChanged={text => _setUserIsWriting(text)}
                     onSend={messages => _onSend(messages)}
                 />
+                {imageURL !== "" ? <ImageMessageGraphic sendMessageImage={_sendMessageImage}
+                    newTextImage={newTextImage} setNewTextImage={setNewTextImage} imageURL={imageURL}/> : <></>}
             </View>
             {convMessages.length > 0 ? <></> :
                 <View style={styles.viewNoMessages}>

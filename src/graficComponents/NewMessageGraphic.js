@@ -11,7 +11,7 @@ export default function NewMessageFooter(props) {
     return (
         <View style={styles.mainView}>
             <View style={styles.viewNewComment}>
-                <TextInput style={styles.inputNewComment}
+                <TextInput style={{...styles.inputNewComment, ...(props.styles ? props.styles : {})}}
                     placeholder={"Inserisci un commento"}
                     value={props.text}
                     onChangeText={props.setText}
