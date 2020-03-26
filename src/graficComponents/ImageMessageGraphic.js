@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     },
     viewNewMessage: {
         paddingTop: 10, 
+        paddingBottom: 10,
         alignItems: 'center', 
         opacity: 0.95,
         zIndex: 2, 
