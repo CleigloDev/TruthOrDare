@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View, StatusBar, Text, TouchableOpacity} from 'react-native';
+import {SafeAreaView, StyleSheet, View, StatusBar, Text, TouchableOpacity, Dimensions} from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -14,6 +14,8 @@ import fontSize from '../modules/fontSize';
 import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';
 import { UserManager } from '../modules/UserManager.js';
 
+const { height: screenHeight } = Dimensions.get('window');
+
 firebase.firestore().settings({
     cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
     persistence: true
@@ -23,10 +25,12 @@ export default function Messaging({ route, navigation }) {
     const [uid, setUID] = useState("");
     const [uidOther, setOtherUID] = useState("");
     const [convMessages, setMessages] = useState([]);
-    const [isWriting, setIsWriting] = useState(false);
+    const [isWriting, setIsWriting] = useState("");
     const [showBusy, setShowBusy] = useState(true);
     const [imageURL, setImageURL] = useState("");
     const [newTextImage, setNewTextImage] = useState("");
+    const [firebaseLastDoc, setFirebaseLastDoc] = useState({});
+    const [loadingEarlier, setLoadingEarlier] = useState(false);
     const firebaseRef = firebase.firestore();
 
     useEffect(() => {
@@ -53,8 +57,12 @@ export default function Messaging({ route, navigation }) {
         _createChatIntoUser();
         messages[0].user.avatar = null;
         firebaseRef.collection("chats").doc(_chatDoc())
-            .collection("messages").doc(messages[0]._id).set(messages[0]);
-        _setUserIsWriting("");
+            .collection("messages").doc(messages[0]._id).set(messages[0]).then(() => {
+                _setUserIsWriting("");
+            }).catch(() => {
+                alert("Invio del messaggio fallito!😥 Riprova");
+                _setUserIsWriting("");
+            });
     };
 
     _createChatIntoUser = () => {
@@ -92,7 +100,7 @@ export default function Messaging({ route, navigation }) {
 
     _snapshotMessages = () => {
         return firebaseRef.collection("chats").doc(_chatDoc()).collection("messages")
-            .orderBy("createdAt", "desc").onSnapshot(_loadMessages);
+            .orderBy("createdAt", "desc").limit(40).onSnapshot(_loadMessages);
     };
 
     _snapshotIsWriting = () => {
@@ -100,13 +108,16 @@ export default function Messaging({ route, navigation }) {
         .collection("messages").doc("isWriting"+uid).onSnapshot(_setIsWriting);
     };
 
-    _setUserIsWriting = (text) => {
-        if(text !== ""){
+    _setUserIsWriting = (sType) => {
+        if(newTextImage !== "" && sType === "TEXT"){
             firebaseRef.collection("chats").doc(_chatDoc())
-                .collection("messages").doc("isWriting"+uidOther).set({isWriting: true});
+                .collection("messages").doc("isWriting"+uidOther).set({isWriting: true, isSendingPic: false});
+        }else if(imageURL !== "" && sType === "IMAGE"){
+            firebaseRef.collection("chats").doc(_chatDoc())
+                .collection("messages").doc("isWriting"+uidOther).set({isWriting: false, isSendingPic: true});
         }else{
             firebaseRef.collection("chats").doc(_chatDoc())
-                .collection("messages").doc("isWriting"+uidOther).set({isWriting: false});
+                .collection("messages").doc("isWriting"+uidOther).set({isWriting: false, isSendingPic: false});
         }
     };
 
@@ -117,6 +128,7 @@ export default function Messaging({ route, navigation }) {
             oDocData.createdAt = new Date(oDocData.createdAt.toDate());
             aNewMessages.push(oDocData);
         });
+        setFirebaseLastDoc(aDocuments.docs[aDocuments.docs?.length -1]);
         const aPrintableMessages = GiftedChat.append(convMessages, aNewMessages);
         setMessages(aPrintableMessages);
         setShowBusy(false);
@@ -130,9 +142,11 @@ export default function Messaging({ route, navigation }) {
     _setIsWriting = (oDoc) => {
         const oDocData = oDoc.data();
         if(oDocData && oDocData.isWriting){
-            setIsWriting(true);
+            setIsWriting("TEXT");
+        }else if(oDocData && oDocData.isSendingPic) {
+            setIsWriting("IMAGE");
         }else{
-            setIsWriting(false);
+            setIsWriting("");
         }
     };
 
@@ -152,6 +166,7 @@ export default function Messaging({ route, navigation }) {
         setImageURL("");
         setNewTextImage("");
 
+        _setUserIsWriting("IMAGE");
         _uploadImageToFirebase(imageURL, oNewMessageImage);
     };
 
@@ -218,12 +233,50 @@ export default function Messaging({ route, navigation }) {
         setNewTextImage("");
     };
 
+    _isCloseToTop = ({ layoutMeasurement, contentOffset, contentSize }) => {
+        const LOAD_EARLIER_ON_SCROLL_HEGHT_OFFSET = -(screenHeight/2) + 50;
+        const contentTopOffset = contentSize.height - layoutMeasurement.height - contentOffset.y;
+        // if the screen is not full of messages, offset would be too big
+        return contentSize.height < layoutMeasurement.height
+            ? contentOffset.y > LOAD_EARLIER_ON_SCROLL_HEGHT_OFFSET // so we only check bottom offset
+            : contentTopOffset + LOAD_EARLIER_ON_SCROLL_HEGHT_OFFSET < 0;
+    };
+
+    _loadMoreMessage = () => {
+        if(firebaseLastDoc){
+            setLoadingEarlier(true);
+            firebaseRef.collection("chats").doc(_chatDoc()).collection("messages")
+                .orderBy("createdAt", "desc").startAfter(firebaseLastDoc).limit(10).get().then((aDocuments) => {
+                    _loadOldMessages(aDocuments);
+                })
+                .catch(err => {
+                    setLoadingEarlier(false);
+                    alert("Ops! Caricamento messaggi fallito 😔, riprova!");
+                });
+        }
+    };
+
+    _loadOldMessages = (aDocuments) => {
+        let aNewMessages = [];
+        aDocuments.forEach((oDoc) => {
+            const oDocData = oDoc.data();
+            oDocData.createdAt = new Date(oDocData.createdAt.toDate());
+            aNewMessages.push(oDocData);
+        });
+        setFirebaseLastDoc(aDocuments.docs[aDocuments.docs?.length -1]);
+        const aPrintableMessages = GiftedChat.append(aNewMessages, convMessages);
+        setMessages(aPrintableMessages);
+        setLoadingEarlier(false);
+    };
+
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={{flex: 1}}>
                 <View style={styles.viewHeader}>
                     <View style={styles.viewWriting}>
-                        {isWriting ? <Text style={styles.textWriting}>Sta scrivendo...</Text> : <></>}
+                        {isWriting !== "" ? 
+                        <Text style={styles.textWriting}>{isWriting === "TEXT" ? "Sta scrivendo..." : 
+                            "Invio immagine..."}</Text> : <></>}
                     </View>
                     <View style={styles.viewAddImage}>
                         <TouchableOpacity onPress={_openImageSelection}>
@@ -234,18 +287,27 @@ export default function Messaging({ route, navigation }) {
                 <GiftedChat
                     placeholder={"Scrivi un messaggio..."}
                     text={newTextImage}
-                    textInputProps={{onChangeText:setNewTextImage}}
+                    textInputProps={{onChangeText:(text) => {
+                            setNewTextImage(text);
+                            _setUserIsWriting("TEXT");
+                        }
+                    }}
+                    onLoadEarlier={x => {console.log(x)}}
+                    listViewProps={{
+                        scrollEventThrottle: 400,
+                        onScroll: ({ nativeEvent }) => {if (_isCloseToTop(nativeEvent)) _loadMoreMessage()}
+                    }}
                     messages={convMessages}
                     user={{
                         _id: uid
                     }}
+                    isLoadingEarlier={loadingEarlier}
                     renderSend={(refChat) => {
                         return refChat.text === "" ? <></> :
                             <TouchableOpacity onPress={_createMessageText.bind(this, refChat)}> 
                                 <MaterialCommunityIcons style={styles.iconSend} name="send" size={30}/>
                             </TouchableOpacity>;
                     }}
-                    onInputTextChanged={text => _setUserIsWriting(text)}
                     onSend={messages => _onSend(messages)}
                 />
                 {imageURL !== "" ? <ImageMessageGraphic sendMessageImage={_sendMessageImage}
