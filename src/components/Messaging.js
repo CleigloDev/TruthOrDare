@@ -243,7 +243,7 @@ export default function Messaging({ route, navigation }) {
     };
 
     _loadMoreMessage = () => {
-        if(firebaseLastDoc){
+        if(firebaseLastDoc && Object.keys(firebaseLastDoc).length > 0 && !loadingEarlier){
             setLoadingEarlier(true);
             firebaseRef.collection("chats").doc(_chatDoc()).collection("messages")
                 .orderBy("createdAt", "desc").startAfter(firebaseLastDoc).limit(10).get().then((aDocuments) => {
@@ -263,9 +263,13 @@ export default function Messaging({ route, navigation }) {
             oDocData.createdAt = new Date(oDocData.createdAt.toDate());
             aNewMessages.push(oDocData);
         });
-        setFirebaseLastDoc(aDocuments.docs[aDocuments.docs?.length -1]);
-        const aPrintableMessages = GiftedChat.append(aNewMessages, convMessages);
-        setMessages(aPrintableMessages);
+        if(aDocuments.docs.length > 0){
+            setFirebaseLastDoc(aDocuments.docs[aDocuments.docs?.length -1]);
+            const aPrintableMessages = GiftedChat.append(aNewMessages, convMessages);
+            setMessages(aPrintableMessages);
+        }else{
+            setFirebaseLastDoc({});
+        }
         setLoadingEarlier(false);
     };
 
