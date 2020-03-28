@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { Tooltip } from 'react-native-elements';
@@ -30,6 +30,14 @@ export default function CommentGraphic(props) {
                 </View>
             </View>
             <Text style={styles.textContent}>{props.text}</Text>
+            <View>
+            {props.uidCreator === props.uidCurrent ? <></> :
+                    <View style={{flex: 1, alignItems: 'flex-end'}}>
+                        <TouchableOpacity onPress={props.chat}>
+                            <MaterialCommunityIcons name="wechat" size={30}/>
+                        </TouchableOpacity>
+                    </View>}
+            </View>
         </View>        
     );
 }

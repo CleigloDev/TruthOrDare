@@ -112,7 +112,9 @@ export default function Post({ route, navigation }) {
 
     _renderItemComments = ({item, index}) => {
         return (
-            <CommentGraph location={"Roma"} text={item.data.text}>
+            <CommentGraph location={"Roma"} text={item.data.text}
+                chat={_navigateChat.bind(this, item.data.uid)}
+                uidCreator={item.data.uid} uidCurrent={uid}>
                 <ToolTipPost uidCreator={item.data.uid} uidCurrent={uid}
                     modify={_editComment.bind(this, item.id, item.data.text)}
                     delete={_deleteComment.bind(this, item.id)} flag={() => {}} />
