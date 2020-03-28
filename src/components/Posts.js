@@ -52,7 +52,7 @@ export default function Post({ navigation }) {
     };
 
     _snapshotPosts = () => {
-        return firebaseRef.collection("posts").orderBy("date", "desc").onSnapshot(_loadPosts);
+        return firebaseRef.collection("posts").where("deleted", "==", 0).orderBy("date", "desc").onSnapshot(_loadPosts);
     };
 
     _snapshotChatUser = () => {
@@ -75,15 +75,17 @@ export default function Post({ navigation }) {
 
     _loadPosts = (aDocuments) => {
         let aDocData = [];
-        aDocuments.forEach((oDoc) => {
-            if(oDoc && oDoc.data && oDoc.data().deleted === 0){
-                aDocData.push(Object.assign({}, { 
-                        id: oDoc.id, 
-                        data: oDoc.data()
-                    }
-                ));
-            }
-        });
+        if(aDocuments && aDocuments.docs.length > 0){
+            aDocuments.forEach((oDoc) => {
+                if(oDoc && oDoc.data && oDoc.data().deleted === 0){
+                    aDocData.push(Object.assign({}, { 
+                            id: oDoc.id, 
+                            data: oDoc.data()
+                        }
+                    ));
+                }
+            });
+        }
         setPosts(aDocData);
         setShowBusy(false);
     };

@@ -19,7 +19,7 @@ export default function ToolTipPost(props) {
                     <MaterialCommunityIcons name="flag-remove" size={18} />
                     <Text>Segnala</Text>
                 </TouchableOpacity> : null}
-            {typeof props.save === "function" ?
+            {props.save && typeof props.save === "function" ?
                 <TouchableOpacity style={styles.buttonTool} 
                     onPress={() => {props.save(), props.refTool.current.toggleTooltip()}}>
                     <MaterialIcons name="favorite" size={18} />

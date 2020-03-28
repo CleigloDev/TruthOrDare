@@ -58,32 +58,51 @@ export default function Post({ route, navigation }) {
     };
 
     _snapshotComments = (postKey) => {
-        return firebaseRef.collection("posts").doc(postKey).collection("comments").orderBy("date", "desc")
-        .onSnapshot(_loadComments);
+        return firebaseRef.collection("posts").doc(postKey).collection("comments")
+            .where("deleted", "==", false).orderBy("date", "desc")
+            .onSnapshot(_loadComments);
     };
 
     _loadComments = (aComments) => {
         var aCommentsData = [];
-        aComments.forEach((oComment) => {
-            aCommentsData.push(Object.assign({}, {
-                id: oComment.id, data: oComment.data()
-                }
-            ));
-        });
+        if(aComments && aComments.docs.length > 0){
+            aComments.forEach((oComment) => {
+                aCommentsData.push(Object.assign({}, {
+                    id: oComment.id, data: oComment.data()
+                    }
+                ));
+            });
+        }
         setComments(aCommentsData);
+    };
+
+    _deleteComment = (commentID) => {
+        firebaseRef.collection("posts").doc(IDPost).collection("comments")
+        .doc(commentID).update({deleted: true})
+        .then(() => {
+            _updatePost("DELETE");
+        }).catch(() => {
+            alert("Ops! Sembra che questo commento non si voglia cancellare 😂");
+        });
     };
 
     _renderItemComments = ({item, index}) => {
         return (
-            <CommentGraph location={"Roma"} text={item.data.text}/>
+            <CommentGraph location={"Roma"} text={item.data.text}>
+                <ToolTipPost uidCreator={item.data.uid} uidCurrent={uid}
+                    delete={_deleteComment.bind(this, item.id)} flag={() => {}} />
+            </CommentGraph>
         );
     };
 
     _createComment = () => {
         firebaseRef.collection("posts").doc(IDPost).collection("comments").add({
             date: new Date(),
-            text: newComment
+            text: newComment,
+            uid: uid,
+            deleted: false
         }).then(() => {
+            _updatePost("ADD");
             _resetPage();
         })
         .catch(() => {
@@ -92,15 +111,19 @@ export default function Post({ route, navigation }) {
         });
     };
 
-    _updatePost = () => {
+    _updatePost = (sAction) => {
         firebaseRef.collection("posts").doc(IDPost).get()
         .then((oDoc) => {
             let {comments} = oDoc.data();
-            comments.push(uid);
+            if(sAction === "ADD"){
+                comments.push(uid);
+            }else if(sAction === "DELETE"){
+                comments.splice(0,1);
+            }
             firebaseRef.collection("posts").doc(IDPost).update({comments})
         })
         .catch(() => {
-
+            alert("Ops! Qualcosa sembra essere andato storto!");
         });
     };
 
@@ -109,7 +132,11 @@ export default function Post({ route, navigation }) {
     };
 
     _deletePost = (sPostKey) => {
-        firebaseRef.collection("posts").doc(sPostKey).update({deleted: 1});
+        setShowBusy(true);
+        firebaseRef.collection("posts").doc(sPostKey).update({deleted: 1})
+        .then(() => {
+            navigation.goBack();
+        });
     };
 
     _savePost = (postInfo) => {
@@ -138,8 +165,8 @@ export default function Post({ route, navigation }) {
                 extraData={comments}
                 renderItem={_renderItemComments}
             />
-            <NewMessageGraphic text={newComment} setText={setNewComment} send={() => {_createComment(); _updatePost()}}/>
-            {showBusy && <BusyIndicator text={"Creazione commento..."} showBusy={showBusy}/>}
+            <NewMessageGraphic text={newComment} setText={setNewComment} send={() => {_createComment()}}/>
+            {showBusy && <BusyIndicator text={"Caricamento commenti..."} showBusy={showBusy}/>}
         </SafeAreaView>
     );
 }
