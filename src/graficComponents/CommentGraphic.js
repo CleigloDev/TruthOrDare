@@ -13,14 +13,19 @@ export default function CommentGraphic(props) {
         <View style={styles.viewContent}>
             <View style={styles.flexRow}>
                 <View style={{flex: 2}}>
-                    <MaterialCommunityIcons name="map-marker-outline" size={15} />
-                    <Text style={styles.textLocation}>{props.location}</Text>
+                    {props.location ? 
+                        <View style={{flexDirection: 'row'}}>
+                            <MaterialCommunityIcons name="map-marker-outline" size={15} />
+                            <Text style={styles.textLocation}>{props.location}</Text>
+                        </View>
+                    : <></>}
                 </View>
                 <View>
                     <Tooltip ref={refTooltipComment} 
                         containerStyle={styles.tooltip} popover={props.children ? 
                         React.cloneElement(props.children, {refTool: refTooltipComment}) : <></>}>
-                        <SimpleLineIcons name="options-vertical" size={15}/>
+                        {!props.children ? <></> :
+                            <SimpleLineIcons name="options-vertical" size={15}/>}
                     </Tooltip>
                 </View>
             </View>

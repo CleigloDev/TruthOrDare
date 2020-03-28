@@ -25,6 +25,12 @@ export default function ToolTipPost(props) {
                     <MaterialIcons name="favorite" size={18} />
                     <Text>Salva</Text>
                 </TouchableOpacity> : null}
+            {props.modify && typeof props.modify === "function" && props.uidCreator === props.uidCurrent ?
+                <TouchableOpacity style={styles.buttonTool} 
+                    onPress={() => {props.modify(), props.refTool.current.toggleTooltip()}}>
+                    <MaterialIcons name="mode-edit" size={18} />
+                    <Text>Edita</Text>
+                </TouchableOpacity> : null}
         </>
     );
 }

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, Text, FlatList} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, FlatList, View} from 'react-native';
 import 'react-native-gesture-handler';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
@@ -25,6 +25,7 @@ export default function Post({ route, navigation }) {
     const [IDPost, setPostID] = useState("");
     const [newComment, setNewComment] = useState("");
     const [comments, setComments] = useState([]);
+    const [IDcommentEdit, setIDCommentEdit] = useState("");
     const firebaseRef = firebase.firestore();
 
     useEffect(() => {
@@ -86,10 +87,26 @@ export default function Post({ route, navigation }) {
         });
     };
 
+    _editComment = (commentID, sText) => {
+        setNewComment(sText);
+        setIDCommentEdit(commentID);
+    };
+
+    _updateComment = () => {
+        firebaseRef.collection("posts").doc(IDPost).collection("comments")
+        .doc(IDcommentEdit).update({text: newComment})
+        .then(() => {
+            _resetPage();
+        }).catch(() => {
+            alert("Ops! Sembra che questo commento non si voglia modificare 😂");
+        });
+    };
+
     _renderItemComments = ({item, index}) => {
         return (
             <CommentGraph location={"Roma"} text={item.data.text}>
                 <ToolTipPost uidCreator={item.data.uid} uidCurrent={uid}
+                    modify={_editComment.bind(this, item.id, item.data.text)}
                     delete={_deleteComment.bind(this, item.id)} flag={() => {}} />
             </CommentGraph>
         );
@@ -129,6 +146,7 @@ export default function Post({ route, navigation }) {
 
     _resetPage = () => {
         setNewComment("");
+        setIDCommentEdit("");
     };
 
     _deletePost = (sPostKey) => {
@@ -149,23 +167,38 @@ export default function Post({ route, navigation }) {
         });
     };
 
+    _onSend = () => {
+        if(IDcommentEdit !== ""){
+            _updateComment();
+        }else{
+            _createComment();
+        }
+    };
+
     return (
         <SafeAreaView style={styles.safeArea}>
-            <PostGraphic location={"Roma"} text={post.text} navigate={() =>{}}
-                chat={_navigateChat.bind(this, post.uid)}
-                uidCreator={post.uid} uidCurrent={uid}>
-                <ToolTipPost uidCreator={post.uid} uidCurrent={uid}
-                    delete={_deletePost.bind(this, post.id)} 
-                    save={_savePost.bind(this, post)} flag={() => {}} />
-            </PostGraphic>
-            <Text style={{paddingLeft: 10}}>Commenti</Text>
-            <FlatList
-                keyExtractor={(item, index) => 'key'+index}
-                data={comments}
-                extraData={comments}
-                renderItem={_renderItemComments}
-            />
-            <NewMessageGraphic text={newComment} setText={setNewComment} send={() => {_createComment()}}/>
+            {IDcommentEdit === "" ?
+                <View style={{flex: 1}}>
+                    <PostGraphic location={"Roma"} text={post.text} navigate={() =>{}}
+                        chat={_navigateChat.bind(this, post.uid)}
+                        uidCreator={post.uid} uidCurrent={uid}>
+                        <ToolTipPost uidCreator={post.uid} uidCurrent={uid}
+                            delete={_deletePost.bind(this, post.id)} 
+                            save={_savePost.bind(this, post)} flag={() => {}} />
+                    </PostGraphic>
+                    <Text style={{paddingLeft: 10}}>Commenti</Text>
+                    <FlatList
+                        keyExtractor={(item, index) => 'key'+index}
+                        data={comments}
+                        extraData={comments}
+                        renderItem={_renderItemComments}
+                    />
+                </View> : 
+                <View style={{flex: 1, justifyContent: 'center', backgroundColor: 'transparent'}}>
+                    <CommentGraph text={newComment}/>
+                </View>}
+            
+            <NewMessageGraphic text={newComment} setText={setNewComment} send={_onSend}/>
             {showBusy && <BusyIndicator text={"Caricamento commenti..."} showBusy={showBusy}/>}
         </SafeAreaView>
     );
