@@ -36,27 +36,29 @@ export default function SavedPost({ navigation }) {
         };
     }, []);
 
-    _deletePost = (sPostKey, sPostSavedKey) => {
+    _deletePost = (sPostKey) => {
         firebaseRef.collection("posts").doc(sPostKey).update({deleted: 1});
-        firebaseRef.collection("users").doc(uid).collection("savedPosts").doc(sPostSavedKey).update({deleted: 1});
     };
 
     _snapshotPosts = () => {
-        return firebaseRef.collection("users").doc(uid).collection("savedPosts")
-        .orderBy("date", "desc").onSnapshot(_loadPosts);
+        return firebaseRef.collection("posts").where("userSaved", "array-contains", uid)
+            .where("deleted", "==", 0)
+            .orderBy("date", "desc").onSnapshot(_loadPosts);
     };
 
     _loadPosts = (aDocuments) => {
         let aDocData = [];
-        aDocuments.forEach((oDoc) => {
-            if(oDoc && oDoc.data && oDoc.data().deleted === 0){
-                aDocData.push(Object.assign({}, { 
-                        id: oDoc.id, 
-                        data: oDoc.data()
-                    }
-                ));
-            }
-        });
+        if(aDocuments && aDocuments.docs.length > 0){
+            aDocuments.forEach((oDoc) => {
+                if(oDoc && oDoc.data && oDoc.data().deleted === 0){
+                    aDocData.push(Object.assign({}, { 
+                            id: oDoc.id, 
+                            data: oDoc.data()
+                        }
+                    ));
+                }
+            });
+        }
         setPosts(aDocData);
         setShowBusy(false);
     };
@@ -70,12 +72,20 @@ export default function SavedPost({ navigation }) {
     _renderItemPost = ({item, index}) => {
         return (
             <PostGraphic text={item.data.text} location={"Roma"}
+                uidCreator={item.data.uid} uidCurrent={uid} comments={item.data.comments.length}
+                chat={_navigateChat.bind(this, item.data.uid)}
                 navigate={_navigateDetail.bind(this, item)}>
                     <ToolTipPost uidCreator={item.data.uid} uidCurrent={uid}
-                        delete={_deletePost.bind(this, item.data.id, item.id)} 
+                        delete={_deletePost.bind(this, item.id)} 
                         save={null} flag={() => {}} />
             </PostGraphic>
         );
+    };
+
+    _navigateChat = (sUIDCreator) => {
+        navigation.navigate("Chat", {
+            uidCreator: sUIDCreator
+        });
     };
 
     return (

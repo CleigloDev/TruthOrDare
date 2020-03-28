@@ -47,8 +47,23 @@ export default function Post({ navigation }) {
     };
 
     _savePost = (postInfo, postID) => {
-        postInfo.id = postID;
-        firebaseRef.collection("users").doc(uid).collection("savedPosts").add(postInfo);
+        firebaseRef.collection("posts").doc(postID).get()
+        .then((oDoc) => {
+            if(oDoc && oDoc.data()){
+                const docData = oDoc.data();
+                let { userSaved } = docData;
+                const bAlreadyLiked = userSaved.includes(uid);
+                if(!bAlreadyLiked){
+                    userSaved.push(uid);
+                    firebaseRef.collection("posts").doc(postID).update({userSaved});
+                }else{
+                    alert("Perché provi a salvarlo di nuovo?😂");
+                }
+            }
+        })
+        .catch(() => {
+            alert("Ops! Errore durante il salvataggio 😥");
+        });
     };
 
     _snapshotPosts = () => {

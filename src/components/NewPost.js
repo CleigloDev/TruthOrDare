@@ -28,7 +28,8 @@ export default function Post({ navigation }) {
                 text: newPost,
                 deleted: 0,
                 uid: sUID,
-                comments: []
+                comments: [],
+                userSaved: []
             }).then(() => {
                 setShowBusy(false);
                 navigation.navigate("Home");
