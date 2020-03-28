@@ -19,7 +19,11 @@ export default function PostGraphic(props) {
                 <Tooltip ref={refTooltip} 
                     containerStyle={styles.tooltip} popover={props.children ? 
                     React.cloneElement(props.children, {refTool: refTooltip}) : <></>}>
-                    <SimpleLineIcons name="options-vertical" size={15}/>
+                    <TouchableOpacity onPress={refTooltip && refTooltip.current ? 
+                        refTooltip.current.toggleTooltip : null}
+                        style={{padding: 10}}>
+                        <SimpleLineIcons name="options-vertical" size={15}/>
+                    </TouchableOpacity>
                 </Tooltip>
             </View>
             <TouchableOpacity onPress={props.navigate}>

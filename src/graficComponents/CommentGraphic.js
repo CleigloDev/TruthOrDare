@@ -21,11 +21,15 @@ export default function CommentGraphic(props) {
                     : <></>}
                 </View>
                 <View>
-                    <Tooltip ref={refTooltipComment} 
+                    <Tooltip ref={refTooltipComment}
                         containerStyle={styles.tooltip} popover={props.children ? 
                         React.cloneElement(props.children, {refTool: refTooltipComment}) : <></>}>
                         {!props.children ? <></> :
-                            <SimpleLineIcons name="options-vertical" size={15}/>}
+                            <TouchableOpacity onPress={refTooltipComment && refTooltipComment.current ? 
+                                refTooltipComment.current.toggleTooltip : null}
+                                style={{padding: 10}}>
+                                <SimpleLineIcons name="options-vertical" size={15}/>
+                            </TouchableOpacity>}
                     </Tooltip>
                 </View>
             </View>
