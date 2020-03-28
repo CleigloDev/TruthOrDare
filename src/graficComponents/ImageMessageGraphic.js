@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, TouchableOpacity, Image} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Image, Platform} from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 import NewMessageGraphic from '../graficComponents/NewMessageGraphic';
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     },
     viewNewMessage: {
         paddingTop: 10, 
-        paddingBottom: 10,
+        paddingBottom: Platform.OS === "android" ? 35 : 10,
         alignItems: 'center', 
         opacity: 0.95,
         zIndex: 2, 
