@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, Text, FlatList, View} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, FlatList, View, BackHandler} from 'react-native';
 import 'react-native-gesture-handler';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
@@ -31,6 +31,8 @@ export default function Post({ route, navigation }) {
     useEffect(() => {
         var snapshotComments;
         setShowBusy(true);
+
+        const backHandler = BackHandler.addEventListener("hardwareBackPress", _backAction);
         UserManager.getCurrentUID(navigation).then(sUID => {
             setUID(sUID);
             const { postKey } = route.params;
@@ -42,8 +44,14 @@ export default function Post({ route, navigation }) {
 
         return () => {
             snapshotComments();
+            backHandler.remove();
         };
     }, []);
+
+    _backAction = () => {
+        IDcommentEdit !== "" ? setIDCommentEdit("") : navigation.goBack();
+        return true;
+    };
 
     _loadPosts = (postKey) => {
         firebaseRef.collection("posts").doc(postKey).get()
