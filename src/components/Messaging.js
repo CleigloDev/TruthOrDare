@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View, StatusBar, Text, TouchableOpacity, Dimensions} from 'react-native';
+import {SafeAreaView, StyleSheet, View, StatusBar, Text, TouchableOpacity, Dimensions, BackHandler} from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -37,6 +37,8 @@ export default function Messaging({ route, navigation }) {
         var snapShotMessages;
         var snapShotIsWriting;
         setShowBusy(true);
+
+        const backHandler = BackHandler.addEventListener("hardwareBackPress", _backAction);
         UserManager.getCurrentUID(navigation).then(sUID => {
             const { uidCreator } = route.params;
             setOtherUID(uidCreator);
@@ -50,8 +52,14 @@ export default function Messaging({ route, navigation }) {
         return () => {
             snapShotMessages();
             snapShotIsWriting();
+            backHandler.remove();
         }
     }, []);
+
+    _backAction = () => {
+        imageURL !== "" ? setImageURL("") : navigation.goBack();
+        return true;
+    };
 
     _onSend = messages => {
         _createChatIntoUser();
