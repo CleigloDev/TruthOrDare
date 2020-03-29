@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, StatusBar, FlatList, View} from 'react-native';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
@@ -60,7 +60,7 @@ export default function Post({ navigation }) {
                 setUserCoords(oUserCoords);
                 resolve();
             }, (error) => {
-                alert("Errore!"+error.code+error.message);
+                alert("Errore!\nImpossibile determinare la posizione\nHai acceso il GPS? 🤔");
                 resolve();
             }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
         });

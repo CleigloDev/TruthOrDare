@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, Text, FlatList, View, BackHandler} from 'react-native';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
@@ -144,7 +144,7 @@ export default function Post({ route, navigation }) {
     };
 
     _getCurrentCity = () => {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             Geolocation.getCurrentPosition((position) => {
                 const lat = position.coords.latitude;
                 const long = position.coords.longitude;
@@ -155,11 +155,11 @@ export default function Post({ route, navigation }) {
                     })
                     .catch(err => {
                         alert("Ops! Non siamo riusciti ad identificare la tua posizione 😥");
-                        reject();
+                        resolve("Unknown!Si vergogna 🤣");
                     });
             }, (error) => {
-                alert("Errore!"+error.code+error.message);
-                reject();
+                alert("Errore!\nCommento creato senza posizione");
+                resolve("Unknown!Si vergogna 🤣");
             }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
         });
     };
