@@ -40,7 +40,11 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string>Ehi! abbiamo bisogno dell'accesso alla tua posizione</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Ehi! abbiamo bisogno dell'accesso alla tua posizione</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Ehi! abbiamo bisogno dell'accesso alla tua posizione</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

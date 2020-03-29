@@ -8,13 +8,12 @@ export default function AsyncText(props) {
 
     useEffect(() => {
         props.textPromise
-        .then((oDoc) => {
-            const text = props.fnProcessText(oDoc);
-
+        .then((oResult) => {
+            const text = props.fnProcessText(oResult);
             setText(text);
         })
         .catch(() => {
-            setText("Caricamento testo fallito!");
+            setText("Caricamento fallito! 😥");
         });
     }, []);
 

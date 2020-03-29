@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, Text, FlatList, View, BackHandler} from 'react-native';
-import 'react-native-gesture-handler';
+import Geolocation from '@react-native-community/geolocation';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
@@ -112,7 +112,7 @@ export default function Post({ route, navigation }) {
 
     _renderItemComments = ({item, index}) => {
         return (
-            <CommentGraph location={"Roma"} text={item.data.text}
+            <CommentGraph location={item.data.location} text={item.data.text}
                 chat={_navigateChat.bind(this, item.data.uid)}
                 uidCreator={item.data.uid} uidCurrent={uid}>
                 <ToolTipPost uidCreator={item.data.uid} uidCurrent={uid}
@@ -123,18 +123,44 @@ export default function Post({ route, navigation }) {
     };
 
     _createComment = () => {
-        firebaseRef.collection("posts").doc(IDPost).collection("comments").add({
-            date: new Date(),
-            text: newComment,
-            uid: uid,
-            deleted: false
-        }).then(() => {
-            _updatePost("ADD");
-            _resetPage();
-        })
-        .catch(() => {
-            _resetPage();
-            alert("Creazione commento fallito!!");
+        setShowBusy(true);
+        _getCurrentCity()
+        .then((city) => {
+            firebaseRef.collection("posts").doc(IDPost).collection("comments").add({
+                date: new Date(),
+                text: newComment,
+                uid: uid,
+                deleted: false,
+                location: city
+            }).then(() => {
+                _updatePost("ADD");
+                _resetPage();
+            })
+            .catch(() => {
+                _resetPage();
+                alert("Creazione commento fallito!!");
+            });
+        });
+    };
+
+    _getCurrentCity = () => {
+        return new Promise((resolve, reject) => {
+            Geolocation.getCurrentPosition((position) => {
+                const lat = position.coords.latitude;
+                const long = position.coords.longitude;
+                fetch("https://geocode.xyz/"+lat+","+long+"?geoit=json&auth=218202394355746891371x5162")
+                    .then(res => res.json())
+                    .then(response => {
+                        resolve(response.city);
+                    })
+                    .catch(err => {
+                        alert("Ops! Non siamo riusciti ad identificare la tua posizione 😥");
+                        reject();
+                    });
+            }, (error) => {
+                alert("Errore!"+error.code+error.message);
+                reject();
+            }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
         });
     };
 
@@ -157,6 +183,7 @@ export default function Post({ route, navigation }) {
     _resetPage = () => {
         setNewComment("");
         setIDCommentEdit("");
+        setShowBusy(false);
     };
 
     _deletePost = (sPostKey) => {
@@ -189,7 +216,7 @@ export default function Post({ route, navigation }) {
         <SafeAreaView style={styles.safeArea}>
             {IDcommentEdit === "" ?
                 <View style={{flex: 1}}>
-                    <PostGraphic location={"Roma"} text={post.text} navigate={() =>{}}
+                    <PostGraphic location={post.location} text={post.text} navigate={() =>{}}
                         chat={_navigateChat.bind(this, post.uid)}
                         uidCreator={post.uid} uidCurrent={uid}>
                         <ToolTipPost uidCreator={post.uid} uidCurrent={uid}

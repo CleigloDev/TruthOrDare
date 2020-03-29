@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, View, Text} from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
 import Entypo from 'react-native-vector-icons/Entypo';
 import 'react-native-gesture-handler';
 import firebase from '@react-native-firebase/app';
@@ -22,12 +23,19 @@ export default function Post({ navigation }) {
 
     _createPost = () => {
         setShowBusy(true);
-        UserManager.getCurrentUID(navigation).then(sUID => {
+        Promise.all([
+            _getCurrentCity(),
+            UserManager.getCurrentUID(navigation)
+        ])
+        .then(aResults => {
+            const sUID = aResults[1];
+            const city = aResults[0];
             firebaseRef.collection("posts").add({
                 date: new Date(),
                 text: newPost,
                 deleted: 0,
                 uid: sUID,
+                location: city,
                 comments: [],
                 userSaved: []
             }).then(() => {
@@ -39,6 +47,27 @@ export default function Post({ navigation }) {
             });
         }).catch(() => {
             setShowBusy(false);
+        });
+    };
+
+    _getCurrentCity = () => {
+        return new Promise((resolve, reject) => {
+            Geolocation.getCurrentPosition((position) => {
+                const lat = position.coords.latitude;
+                const long = position.coords.longitude;
+                fetch("https://geocode.xyz/"+lat+","+long+"?geoit=json&auth=218202394355746891371x5162")
+                    .then(res => res.json())
+                    .then(response => {
+                        resolve(response.city);
+                    })
+                    .catch(err => {
+                        alert("Ops! Non siamo riusciti ad identificare la tua posizione 😥");
+                        reject();
+                    });
+            }, (error) => {
+                alert("Errore!"+error.code+error.message);
+                reject();
+            }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
         });
     };
 

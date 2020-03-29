@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, StatusBar, FlatList, View} from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
@@ -21,6 +22,7 @@ export default function Post({ navigation }) {
     const [uid, setUID] = useState("");
     const [posts , setPosts] = useState([]);
     const [showBusy, setShowBusy] = useState(true);
+    const [userCoords, setUserCoords] = useState("");
     const [showNotification, setShowNotification] = useState(false);
     const firebaseRef = firebase.firestore();
 
@@ -28,7 +30,11 @@ export default function Post({ navigation }) {
         let snapShotPost;
         let snapShotChatUser;
         setShowBusy(true);
-        UserManager.getCurrentUID(navigation).then(sUID => {
+        Promise.all([
+            _getCurrentPosition(),
+            UserManager.getCurrentUID(navigation)
+        ]).then(aResults => {
+            const sUID = aResults[1];
             setUID(sUID);
             snapShotPost = _snapshotPosts();
             snapShotChatUser = _snapshotChatUser();
@@ -41,6 +47,24 @@ export default function Post({ navigation }) {
             snapShotChatUser();
         };
     }, []);
+
+    _getCurrentPosition = () => {
+        return new Promise((resolve) => {
+            Geolocation.getCurrentPosition((position) => {
+                const lat = position.coords.latitude;
+                const long = position.coords.longitude;
+                const oUserCoords = {
+                    lat,
+                    long
+                };
+                setUserCoords(oUserCoords);
+                resolve();
+            }, (error) => {
+                alert("Errore!"+error.code+error.message);
+                resolve();
+            }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
+        });
+    };
 
     _deletePost = (sPostKey) => {
         firebaseRef.collection("posts").doc(sPostKey).update({deleted: 1});
@@ -128,7 +152,7 @@ export default function Post({ navigation }) {
 
     _renderItemPost = ({item, index}) => {
         return (
-            <PostGraphic text={item.data.text} location={"Roma"} chat={_navigateChat.bind(this, item.data.uid)}
+            <PostGraphic text={item.data.text} location={item.data.location} chat={_navigateChat.bind(this, item.data.uid)}
                 uidCreator={item.data.uid} uidCurrent={uid} comments={item.data.comments.length}
                 navigate={_navigateDetail.bind(this, item)}>
                     <ToolTipPost uidCreator={item.data.uid} uidCurrent={uid}
@@ -141,7 +165,7 @@ export default function Post({ navigation }) {
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={{flex: 3}}>
-                <HeaderLocation />
+                <HeaderLocation userCoords={userCoords}/>
                 <View style={{flex: 3}}>
                     {posts.length > 0 ?
                         <FlatList

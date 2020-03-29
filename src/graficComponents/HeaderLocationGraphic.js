@@ -1,14 +1,27 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
+import AsyncText from '../AsyncComponents/AsyncText';
+
 export default function HeaderLocation(props) {
+
+    _getUserCity = () => {
+        return fetch("https://geocode.xyz/"+props.userCoords.lat+","+props.userCoords.long+"?geoit=json&auth=218202394355746891371x5162")
+        .then(res => res.json());
+    };
+
+    _setCity = (oResult) => {
+        return oResult.city;
+    }
 
     return (
         <>  
             <View style={styles.viewWrapper}>
                 <Text>Location: </Text>
                 <TouchableOpacity>
-                    <Text style={{fontWeight: 'bold'}}>Roma</Text>
+                    {props.userCoords === "" ? 
+                        <Text style={{fontWeight: 'bold'}}>Sconosciuta!</Text> :
+                        <AsyncText textPromise={_getUserCity()} fnProcessText={_setCity}/>}
                 </TouchableOpacity>
             </View>
         </>

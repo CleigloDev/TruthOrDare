@@ -71,7 +71,7 @@ export default function SavedPost({ navigation }) {
 
     _renderItemPost = ({item, index}) => {
         return (
-            <PostGraphic text={item.data.text} location={"Roma"}
+            <PostGraphic text={item.data.text} location={item.data.location}
                 uidCreator={item.data.uid} uidCurrent={uid} comments={item.data.comments.length}
                 chat={_navigateChat.bind(this, item.data.uid)}
                 navigate={_navigateDetail.bind(this, item)}>
