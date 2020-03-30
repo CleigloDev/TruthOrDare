@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View, Text} from 'react-native';
+import {SafeAreaView, StyleSheet, View, Text, ToastAndroid} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import Entypo from 'react-native-vector-icons/Entypo';
 import 'react-native-gesture-handler';
@@ -65,10 +65,17 @@ export default function Post({ navigation }) {
                         resolve("Unknown!Si vergogna 🤣");
                     });
             }, (error) => {
-                alert("Errore!\nPost creato senza posizione");
+                _showToast("Attenzione!\nPost creato senza posizione", "LONG");
                 resolve("Unknown!Si vergogna 🤣");
             }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
         });
+    };
+
+    _showToast = (sMessage, sDuration) => {
+        ToastAndroid.showWithGravity(sMessage,
+            ToastAndroid[sDuration],
+            ToastAndroid.CENTER
+        );
     };
 
     return (

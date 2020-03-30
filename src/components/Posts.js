@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, StatusBar, FlatList, View, PermissionsAndroid, Platform} from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, FlatList, View, PermissionsAndroid, Platform, ToastAndroid} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
@@ -118,15 +118,28 @@ export default function Post({ navigation }) {
                 const bAlreadyLiked = userSaved.includes(uid);
                 if(!bAlreadyLiked){
                     userSaved.push(uid);
-                    firebaseRef.collection("posts").doc(postID).update({userSaved});
+                    firebaseRef.collection("posts").doc(postID).update({userSaved})
+                    .then(() => {
+                        _showToast("Post salvato con successo!", "LONG");
+                    })
+                    .catch(() => {
+                        alert("Ops! Qualcosa è andato storto nel salvataggio 😥");
+                    });
                 }else{
-                    alert("Perché provi a salvarlo di nuovo?😂");
+                    _showToast("Perché provi a salvarlo di nuovo?😂", "LONG");
                 }
             }
         })
         .catch(() => {
             alert("Ops! Errore durante il salvataggio 😥");
         });
+    };
+
+    _showToast = (sMessage, sDuration) => {
+        ToastAndroid.showWithGravity(sMessage,
+            ToastAndroid[sDuration],
+            ToastAndroid.CENTER
+        );
     };
 
     _snapshotPosts = () => {

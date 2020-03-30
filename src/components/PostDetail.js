@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, Text, FlatList, View, BackHandler} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, FlatList, View, BackHandler, ToastAndroid} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
@@ -159,10 +159,17 @@ export default function Post({ route, navigation }) {
                         resolve("Unknown!Si vergogna 🤣");
                     });
             }, (error) => {
-                alert("Errore!\nCommento creato senza posizione");
+                _showToast("Attenzione!\nCommento creato senza posizione", "LONG");
                 resolve("Unknown!Si vergogna 🤣");
             }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
         });
+    };
+
+    _showToast = (sMessage, sDuration) => {
+        ToastAndroid.showWithGravity(sMessage,
+            ToastAndroid[sDuration],
+            ToastAndroid.CENTER
+        );
     };
 
     _updatePost = (sAction) => {
