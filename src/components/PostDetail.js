@@ -62,7 +62,8 @@ export default function Post({ route, navigation }) {
             setPostID(postKey);
             setShowBusy(false);
         }).catch((oErr) => {
-            alert("Impossibile caricare i post! Riprovare");
+            alert("Contenuto non trovato!\nMagari è stato eliminato?🤔");
+            setShowBusy(false);
         });
     };
 
@@ -148,7 +149,7 @@ export default function Post({ route, navigation }) {
             Geolocation.getCurrentPosition((position) => {
                 const lat = position.coords.latitude;
                 const long = position.coords.longitude;
-                fetch("https://geocode.xyz/"+lat+","+long+"?geoit=json&auth=218202394355746891371x5162")
+                fetch("https://geocode.xyz/"+lat+","+long+"?geoit=json"/*&auth=218202394355746891371x5162"*/)
                     .then(res => res.json())
                     .then(response => {
                         resolve(response.city);

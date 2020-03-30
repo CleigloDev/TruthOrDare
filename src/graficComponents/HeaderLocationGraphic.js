@@ -6,7 +6,8 @@ import AsyncText from '../AsyncComponents/AsyncText';
 export default function HeaderLocation(props) {
 
     _getUserCity = () => {
-        return fetch("https://geocode.xyz/"+props.userCoords.lat+","+props.userCoords.long+"?geoit=json&auth=218202394355746891371x5162")
+        return fetch("https://geocode.xyz/"+props.userCoords.lat+","+props.userCoords.long+"?geoit=json"
+        /*&auth=218202394355746891371x5162"*/)
         .then(res => res.json());
     };
 

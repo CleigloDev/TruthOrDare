@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, StatusBar, FlatList, View} from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, FlatList, View, PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
@@ -50,19 +50,58 @@ export default function Post({ navigation }) {
 
     _getCurrentPosition = () => {
         return new Promise((resolve) => {
-            Geolocation.getCurrentPosition((position) => {
-                const lat = position.coords.latitude;
-                const long = position.coords.longitude;
-                const oUserCoords = {
-                    lat,
-                    long
-                };
-                setUserCoords(oUserCoords);
-                resolve();
-            }, (error) => {
+            let aPermissionPromise = [];
+            if(Platform.OS === "android"){
+                aPermissionPromise = [_getLocationPermission()];
+            }
+            Promise.all(aPermissionPromise)
+            .then(() => {
+                Geolocation.getCurrentPosition((position) => {
+                    const lat = position.coords.latitude;
+                    const long = position.coords.longitude;
+                    const oUserCoords = {
+                        lat,
+                        long
+                    };
+                    setUserCoords(oUserCoords);
+                    resolve();
+                }, (error) => {
+                    alert("Errore!\nImpossibile determinare la posizione\nHai acceso il GPS? 🤔");
+                    resolve();
+                }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
+            })
+            .catch(() => {
                 alert("Errore!\nImpossibile determinare la posizione\nHai acceso il GPS? 🤔");
                 resolve();
-            }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
+            });
+        });
+    };
+
+    _getLocationPermission = () => {
+        return new Promise((resolve, reject) => {
+            try{
+                PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                    {
+                    title: "TruthOrDare Location Permission",
+                    message:
+                        "Ehi! Abbiamo bisogno della tua posizione",
+                    buttonNegative: "Cancella",
+                    buttonPositive: "Ok"
+                    }
+                ).then((granted) => {
+                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                        resolve();
+                    } else {
+                        reject();
+                    }
+                })
+                .catch(() => {
+                    reject();
+                });
+            }catch(err){
+                reject();
+            }
         });
     };
 

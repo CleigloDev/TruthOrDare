@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View, StatusBar, Text, TouchableOpacity, Dimensions, BackHandler} from 'react-native';
+import {SafeAreaView, StyleSheet, View, StatusBar, Platform, Text, TouchableOpacity, Dimensions, BackHandler, PermissionsAndroid} from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -159,11 +159,51 @@ export default function Messaging({ route, navigation }) {
     };
 
     _openImageSelection = () => {
-        ImagePicker.openPicker({
-            compressImageQuality: 0.8,
-            cropping: true
-        }).then(oImageInfo => {
-            setImageURL(oImageInfo);
+        let aPromisesAndroid = [];
+        if(Platform.OS === "android"){
+            aPromisesAndroid = [_getStoragePermission()];
+        }
+        Promise.all(aPromisesAndroid)
+        .then(() => {
+            ImagePicker.openPicker({
+                compressImageQuality: 0.8,
+                cropping: true
+            }).then(oImageInfo => {
+                setImageURL(oImageInfo);
+            });
+        })
+        .catch(() => {
+            
+        })
+    };
+
+    _getStoragePermission = () => {
+        return new Promise((resolve, reject) => {
+            try {
+                PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+                    {
+                    title: "TruthOrDare Storage Permission",
+                    message: "Ci devi concedere il permesso per vedere le immagini!",
+                    buttonNegative: "Cancella",
+                    buttonPositive: "Ok"
+                    }
+                ).then(granted => {
+                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                        resolve();
+                    } else {
+                        alert("Senza permessi non puoi selezionare immagini! 😟");
+                        reject();
+                    }
+                })
+                .catch(() => {
+                    alert("Ops! Qualcosa è andato storto 😥! Riprova");
+                    reject();
+                });
+            } catch (err) {
+                alert("Ops! Qualcosa è andato storto 😥! Riprova");
+                reject();
+            }
         });
     };
 

@@ -65,7 +65,7 @@ export default function SavedPost({ navigation }) {
 
     _navigateDetail = (item) => {
         navigation.navigate("PostDetail", {
-            "postKey": item.data.id
+            "postKey": item.id
         });
     };
 
