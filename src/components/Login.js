@@ -3,6 +3,7 @@ import {SafeAreaView, StyleSheet, View, StatusBar, Text, TouchableOpacity, Image
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
+import '@react-native-firebase/messaging';
 
 import fontSize from '../modules/fontSize';
 import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';
@@ -10,6 +11,7 @@ import { UserManager } from '../modules/UserManager.js';
 
 export default function Login({ navigation }) {
     const [showBusy, setShowBusy] = useState(true);
+    const firebaseRef = firebase.firestore();
 
     useEffect(() => {
         UserManager.getCurrentUID(navigation)
@@ -28,11 +30,34 @@ export default function Login({ navigation }) {
         .signInAnonymously()
         .then(oUserInfo => {
             AsyncStorage.setItem("UID", oUserInfo.user.uid);
-            navigation.navigate("MainStack");
+            _saveFirebaseToken().then(() => {
+                navigation.navigate("MainStack");
+            }).catch(() => {
+                alert("Errore durante creazione token notifiche!");
+            });
             setShowBusy(false); 
         }).catch((error) => {
             alert(error);
             setShowBusy(false); 
+        });
+    };
+
+    _saveFirebaseToken = async(sUID) => {
+        return new Promise(async(resolve, reject) => {
+            firebase.messaging().hasPermission()
+            .then(async enabled => {
+                if (enabled) {
+                    const fcmToken = await firebase.messaging().getToken();
+                    if (fcmToken) {
+                        firebaseRef.collection("users").doc(sUID).set({token: fcmToken});
+                        resolve();
+                    } else {
+                        reject();
+                    }
+                } else {
+                    reject();
+                }
+            });
         });
     };
 
