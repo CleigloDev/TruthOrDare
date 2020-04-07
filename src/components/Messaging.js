@@ -64,6 +64,7 @@ export default function Messaging({ route, navigation }) {
     _onSend = messages => {
         _createChatIntoUser();
         messages[0].user.avatar = null;
+        messages[0].uidOther = uidOther;
         firebaseRef.collection("chats").doc(_chatDoc())
             .collection("messages").doc(messages[0]._id).set(messages[0]).then(() => {
                 _setUserIsWriting("");
@@ -82,8 +83,8 @@ export default function Messaging({ route, navigation }) {
 
     _setChatIdLogic = (sUID, chatDoc) => {
         return firebaseRef.collection("users").doc(sUID).get().then((oDoc) => {
-            if(oDoc.data() && oDoc.data().chats){
-                let chats = oDoc.data().chats;
+            if(oDoc.data()){
+                let chats = oDoc.data().chats ? oDoc.data().chats : [];
                 let foundChat = chats.find(chatId => chatId === chatDoc);
                 let oUserUpdate = oDoc.data();
                 if(!foundChat)(

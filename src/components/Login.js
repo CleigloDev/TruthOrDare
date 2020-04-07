@@ -30,7 +30,7 @@ export default function Login({ navigation }) {
         .signInAnonymously()
         .then(oUserInfo => {
             AsyncStorage.setItem("UID", oUserInfo.user.uid);
-            _saveFirebaseToken().then(() => {
+            _saveFirebaseToken(oUserInfo.user.uid).then(() => {
                 navigation.navigate("MainStack");
             }).catch(() => {
                 alert("Errore durante creazione token notifiche!");
