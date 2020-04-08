@@ -41,7 +41,7 @@ export default function MessageList({ route, navigation }) {
     };
 
     _loadUserChats = (oDoc) => {
-        if(oDoc.data()){
+        if(oDoc.data() && oDoc.data().chats){
             const oUserInfo = oDoc.data();
             const aChats = oUserInfo.chats;
             const aChatSet = [...(new Set([...chats,...aChats]))];
