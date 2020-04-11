@@ -45,8 +45,13 @@ export default function Login(props) {
                 if (enabled) {
                     const fcmToken = await firebase.messaging().getToken();
                     if (fcmToken) {
-                        firebaseRef.collection("users").doc(sUID).set({token: fcmToken});
-                        resolve();
+                        firebaseRef.collection("users").doc(sUID).set({token: fcmToken})
+                        .then(() => {
+                            resolve();
+                        })
+                        .catch(() => {
+                            reject();
+                        });
                     } else {
                         reject();
                     }

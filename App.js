@@ -28,9 +28,14 @@ function App() {
     //messaging().onNotificationOpenedApp(remoteMessage => {
     //  _openChatOrLogin(remoteMessage);
     //});
-    messaging().getInitialNotification()
-    .then(remoteMessage => {
-        _openChatOrLogin(remoteMessage);
+    messaging().registerDeviceForRemoteMessages().then(() => {
+      setTimeout(() => {
+        messaging().getInitialNotification()
+        .then(remoteMessage => {
+            _openChatOrLogin(remoteMessage);
+        });
+      //TODO: check if delay is needed for notification to work properly  
+      }, 1000);
     });
   }, []);
 
@@ -65,7 +70,11 @@ function App() {
   };
 
   if(appLoading){
-    return null;
+    return (
+      <>
+        {showBusy && <BusyIndicator text={"Avvio l'app.."} showBusy={showBusy}/>}
+      </>
+    );
   }
 
   if(uid === ""){
