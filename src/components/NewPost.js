@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View, Text, ToastAndroid} from 'react-native';
+import {SafeAreaView, StyleSheet, View, Text, ToastAndroid, TouchableOpacity, TextInput } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import Entypo from 'react-native-vector-icons/Entypo';
-import 'react-native-gesture-handler';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
-import { TouchableOpacity, TextInput } from 'react-native-gesture-handler';
 
 import fontSize from '../modules/fontSize';
 import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';

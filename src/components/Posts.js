@@ -18,18 +18,24 @@ firebase.firestore().settings({
     persistence: true
 });
 
-export default function Post({ navigation }) {
+export default function Post({ navigation, route }) {
     const [uid, setUID] = useState("");
     const [posts , setPosts] = useState([]);
     const [showBusy, setShowBusy] = useState(true);
     const [userCoords, setUserCoords] = useState("");
     const [showNotification, setShowNotification] = useState(false);
+    const [forceReload, setForceReload] = useState(false);
     const firebaseRef = firebase.firestore();
 
     useEffect(() => {
         let snapShotPost;
         let snapShotChatUser;
         setShowBusy(true);
+        const { uidSender } = route.params;
+        if(uidSender){
+            route.params.uidSender = null;
+            return _navigateChat(uidSender, setForceReload);
+        }
         Promise.all([
             _getCurrentPosition(),
             UserManager.getCurrentUID(navigation)
@@ -46,7 +52,7 @@ export default function Post({ navigation }) {
             snapShotPost();
             snapShotChatUser();
         };
-    }, []);
+    }, [forceReload]);
 
     _getCurrentPosition = () => {
         return new Promise((resolve) => {
@@ -191,9 +197,13 @@ export default function Post({ navigation }) {
         navigation.navigate("SavedPosts");
     };
 
-    _navigateChat = (sUIDCreator) => {
+    _navigateChat = (sUIDCreator, setForceReload) => {
+        let forceReloadParam = setForceReload && typeof setForceReload === "function" ? function(){
+            setForceReload(!forceReload);
+        } : null;
         navigation.navigate("Chat", {
-            uidCreator: sUIDCreator
+            uidCreator: sUIDCreator,
+            forceReload: forceReloadParam
         });
     };
 

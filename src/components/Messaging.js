@@ -57,7 +57,9 @@ export default function Messaging({ route, navigation }) {
     }, []);
 
     _backAction = () => {
-        imageURL !== "" ? setImageURL("") : navigation.goBack();
+        const { forceReload } = route.params;
+        imageURL !== "" ? setImageURL("") : 
+            ((forceReload ? forceReload() : null), navigation.goBack());
         return true;
     };
 

@@ -3,43 +3,39 @@ import {SafeAreaView, StyleSheet, View, StatusBar, Text, TouchableOpacity, Image
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
-import '@react-native-firebase/messaging';
 
 import fontSize from '../modules/fontSize';
-import BusyIndicator from '../graficComponents/BusyIndicatorGraphic';
-import { UserManager } from '../modules/UserManager.js';
 
-export default function Login({ navigation }) {
-    const [showBusy, setShowBusy] = useState(true);
+export default function Login(props) {
     const firebaseRef = firebase.firestore();
 
-    useEffect(() => {
-        UserManager.getCurrentUID(navigation)
-        .then(() => {
-            navigation.navigate("MainStack")
-            setShowBusy(false); 
-        })
-        .catch(() => {
-            setShowBusy(false)
-        });
+    useState(() => {
+        //props.setShowBusy(false);
     }, []);
 
     _login = () => {
-        setShowBusy(true); 
+        props.setShowBusy(true); 
         firebase.auth()
         .signInAnonymously()
         .then(oUserInfo => {
-            AsyncStorage.setItem("UID", oUserInfo.user.uid);
-            _saveFirebaseToken(oUserInfo.user.uid).then(() => {
-                navigation.navigate("MainStack");
+            const { user } = oUserInfo;
+            const { uid } = user;
+            AsyncStorage.setItem("UID", uid);
+            _saveFirebaseToken(uid).then(() => {
+                _redirectToMain(uid);
             }).catch(() => {
                 alert("Errore durante creazione token notifiche!");
+                _redirectToMain(uid);
             });
-            setShowBusy(false); 
         }).catch((error) => {
             alert(error);
-            setShowBusy(false); 
+            props.setShowBusy(false); 
         });
+    };
+
+    _redirectToMain = (uid) => {
+        props.setUID(uid);
+        props.setShowBusy(false); 
     };
 
     _saveFirebaseToken = async(sUID) => {
@@ -69,7 +65,6 @@ export default function Login({ navigation }) {
                     <Text style={styles.text}>Login Anonimo</Text>
                 </TouchableOpacity>
             </View>
-            {showBusy && <BusyIndicator text={"Avvio l'app.."} showBusy={showBusy}/>}
         </SafeAreaView>
     );
 }
