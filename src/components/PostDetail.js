@@ -231,7 +231,7 @@ export default function Post({ route, navigation }) {
                             delete={_deletePost.bind(this, post.id)} 
                             save={_savePost.bind(this, post)} flag={() => {}} />
                     </PostGraphic>
-                    <Text style={{paddingLeft: 10}}>Commenti</Text>
+                    <Text style={{color: "white", paddingLeft: 10}}>Commenti</Text>
                     <FlatList
                         keyExtractor={(item, index) => 'key'+index}
                         data={comments}
@@ -252,6 +252,6 @@ export default function Post({ route, navigation }) {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "#313a4a"
     }
 });

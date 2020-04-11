@@ -252,7 +252,7 @@ export default function Post({ navigation, route }) {
 const styles = StyleSheet.create({
     viewFlex: {
         flex: 0.20,
-        backgroundColor: "white"
+        backgroundColor: "#252c38"
     },
     viewShadow: {
         shadowOpacity: 0.5,
@@ -266,6 +266,6 @@ const styles = StyleSheet.create({
     },
     safeArea: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "#313a4a"
     }
 });

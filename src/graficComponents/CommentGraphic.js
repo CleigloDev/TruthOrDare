@@ -15,7 +15,7 @@ export default function CommentGraphic(props) {
                 <View style={{flex: 2}}>
                     {props.location ? 
                         <View style={{flexDirection: 'row'}}>
-                            <MaterialCommunityIcons name="map-marker-outline" size={15} />
+                            <MaterialCommunityIcons name="map-marker-outline" size={15} color="#d1d1d1"/>
                             <Text style={styles.textLocation}>{props.location}</Text>
                         </View>
                     : <></>}
@@ -28,7 +28,7 @@ export default function CommentGraphic(props) {
                             <TouchableOpacity onPress={refTooltipComment && refTooltipComment.current ? 
                                 refTooltipComment.current.toggleTooltip : null}
                                 style={{padding: 10}}>
-                                <SimpleLineIcons name="options-vertical" size={15}/>
+                                <SimpleLineIcons name="options-vertical" size={15} color="#d1d1d1"/>
                             </TouchableOpacity>}
                     </Tooltip>
                 </View>
@@ -38,7 +38,7 @@ export default function CommentGraphic(props) {
             {props.uidCreator === props.uidCurrent ? <></> :
                     <View style={{flex: 1, alignItems: 'flex-end'}}>
                         <TouchableOpacity onPress={props.chat}>
-                            <MaterialCommunityIcons name="wechat" size={30}/>
+                            <MaterialCommunityIcons name="wechat" size={30} color="#d1d1d1"/>
                         </TouchableOpacity>
                     </View>}
             </View>
@@ -50,10 +50,11 @@ const styles = StyleSheet.create({
     textContent: {
         flexShrink: 1, 
         fontSize: fontSize(20),
-        paddingBottom: 10
+        paddingBottom: 10,
+        color: "white"
     },
     viewContent:{
-        backgroundColor: '#F0F0F0',
+        backgroundColor: '#2b3547',
         borderWidth: 1,
         borderRadius: 20,
         borderColor: "#d1d1d1",
@@ -65,11 +66,12 @@ const styles = StyleSheet.create({
     },
     textLocation: {
         fontSize: fontSize(13), 
-        paddingBottom: 10
+        paddingBottom: 10,
+        color: "white"
     },
     tooltip: {
         height: "auto", 
-        backgroundColor: "white", 
+        backgroundColor: "#252c38", 
         borderColor: "black", 
         borderWidth: 1
     }

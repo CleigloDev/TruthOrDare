@@ -16,12 +16,13 @@ export default function NoPost(props) {
 const styles = StyleSheet.create({
     viewText:{
         flex: 1,
-        backgroundColor: "white",
+        backgroundColor: "#313a4a",
         alignItems: 'center',
         justifyContent: 'center'
     },
     textNoPost: {
         fontSize: fontSize(20), 
-        flexShrink: 1 
+        flexShrink: 1,
+        color: "white"
     }
 });

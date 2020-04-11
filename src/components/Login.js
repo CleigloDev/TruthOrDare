@@ -72,11 +72,11 @@ export default function Login(props) {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "#313a4a"
     },
     iconLogin:{
         flex: 1,
-        backgroundColor: "white",
+        backgroundColor: "#313a4a",
         position: 'absolute',
         left: 0,
         right: 0,
@@ -86,15 +86,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     wrapper: {
-        alignItems: "center"
+        alignItems: "center",
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: "white",
+        padding: 50
     },
     image: {
         height: 100, 
-        width: 100
+        width: 100,
     },
     text: {
         fontSize: fontSize(25), 
-        padding: 20, 
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: "#d1d1d1",
+        marginTop: 20,
     }
 });

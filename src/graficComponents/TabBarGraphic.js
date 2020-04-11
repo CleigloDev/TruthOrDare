@@ -10,10 +10,9 @@ export default function TabBar(props) {
                 <View style={styles.viewWrapper}>
                     <TouchableOpacity onPress={props.leftAction} style={styles.buttonAdd}>
                         {props.showNotificationLeft ?
-                            <View style={{backgroundColor: 'red', height: 10, width: 10, 
-                            position: 'absolute', left: 20, bottom: 45, borderRadius: 30}}/> : <></>}
-                        <Ionicons name="logo-snapchat" size={30}/>
-                        <Text>Ghost Chat</Text>
+                            <View style={styles.newMessageView}/> : <></>}
+                        <Ionicons name="logo-snapchat" size={30} color="#d1d1d1"/>
+                        <Text style={{fontSize: 15, color: "#d1d1d1"}}>Ghost Chat</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.viewWrapper}>
@@ -23,8 +22,8 @@ export default function TabBar(props) {
                 </View>
                 <View style={styles.viewWrapper}>
                     <TouchableOpacity onPress={props.rightAction} style={styles.alignCenter}>
-                        <MaterialIcons name="favorite-border" size={30}/>  
-                        <Text style={{fontSize: 15}}>Post Salvati</Text>
+                        <MaterialIcons name="favorite-border" size={30} color="#d1d1d1"/>  
+                        <Text style={{fontSize: 15, color: "#d1d1d1"}}>Post Salvati</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -44,13 +43,13 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     alignCenter: {
-        backgroundColor: 'white',
+        backgroundColor: '#252c38',
         alignItems: 'center', 
         justifyContent: 'center'
     },
     buttonAdd: {
         borderRadius: 30,
-        backgroundColor: 'white',
+        backgroundColor: '#252c38',
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -58,5 +57,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         color: "#d1d1d1",
         paddingBottom: Platform.OS === 'ios' ? 100 : 30
+    },
+    newMessageView: {
+        backgroundColor: '#f28d07', 
+        height: 10, 
+        width: 10, 
+        position: 'absolute',
+        left: 20,
+        bottom: 45, 
+        borderRadius: 30
     }
 });

@@ -80,6 +80,7 @@ export default function Post({ navigation }) {
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.viewTextInput}>
                 <TextInput style={styles.textInput}
+                    placeholderTextColor="#bdbebf"
                     placeholder={"Scrivi qualcosa di carino.."}
                     value={newPost}
                     onChangeText={setNewPost}
@@ -101,7 +102,7 @@ export default function Post({ navigation }) {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "#313a4a"
     },
     alignEnd: {
         alignItems: "flex-end",
@@ -113,7 +114,8 @@ const styles = StyleSheet.create({
     textInput: {
         padding: 10, 
         paddingTop: 30, 
-        fontSize: fontSize(30)
+        fontSize: fontSize(30),
+        color: "white"
     },
     viewTextInput: {
         flex: 7, 
@@ -123,6 +125,7 @@ const styles = StyleSheet.create({
     textButton: {
         fontSize: fontSize(20), 
         marginBottom: 3, 
-        paddingLeft: 5
+        paddingLeft: 5,
+        color: "white"
     }
 });

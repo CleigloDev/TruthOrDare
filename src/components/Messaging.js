@@ -335,11 +335,14 @@ export default function Messaging({ route, navigation }) {
                     </View>
                     <View style={styles.viewAddImage}>
                         <TouchableOpacity onPress={_openImageSelection}>
-                            <MaterialIcons name="add-a-photo" size={30}/>
+                            <MaterialIcons name="add-a-photo" size={30} color="#d1d1d1"/>
                         </TouchableOpacity>
                     </View>
                 </View>
+                {// Workaround for gifted chat missing style prop
+                <View style={{paddingTop: 15}}/>}
                 <GiftedChat
+                    textInputStyle={styles.textInputGifted}
                     placeholder={"Scrivi un messaggio..."}
                     text={newTextImage}
                     textInputProps={{onChangeText:(text) => {
@@ -359,7 +362,7 @@ export default function Messaging({ route, navigation }) {
                     isLoadingEarlier={loadingEarlier}
                     renderSend={(refChat) => {
                         return refChat.text === "" ? <></> :
-                            <TouchableOpacity onPress={_createMessageText.bind(this, refChat)}> 
+                            <TouchableOpacity style={styles.wrapperSend} onPress={_createMessageText.bind(this, refChat)}> 
                                 <MaterialCommunityIcons style={styles.iconSend} name="send" size={30}/>
                             </TouchableOpacity>;
                     }}
@@ -380,12 +383,13 @@ export default function Messaging({ route, navigation }) {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "#313a4a"
     },
     textNoMessages: {
         paddingTop: 50,
         fontSize: fontSize(20), 
-        flexShrink: 1 
+        flexShrink: 1,
+        color: "white"
     },
     viewNoMessages: {
         position: 'absolute', 
@@ -398,7 +402,7 @@ const styles = StyleSheet.create({
         height: '90%'
     },
     textWriting: {
-        color: 'gray', 
+        color: '#d1d1d1', 
         paddingTop: 10
     },
     viewAddImage: {
@@ -417,12 +421,27 @@ const styles = StyleSheet.create({
         zIndex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F9F9F9'
+        backgroundColor: '#252c38',
+        paddingBottom: 10,
     },
     iconSend: {
-        marginLeft: 5, 
-        marginRight: 7,
-        marginBottom: Platform.OS === "ios" ? 5 : 8,
         color: "#1EA6B6",
+    },
+    wrapperSend: {
+        backgroundColor: "white", 
+        borderRadius: 20,
+        alignContent: 'center',
+        padding: 5,
+        marginTop: 3,
+        marginBottom: Platform.OS === "ios" ? 5 : 8
+    },
+    textInputGifted: {
+        margin: 8, 
+        color: "white", 
+        backgroundColor: "#313a4a", 
+        borderRadius: 20,
+        marginTop: 3,
+        padding: 5,
+        marginBottom: Platform.OS === "ios" ? 5 : 8
     }
 });

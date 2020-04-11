@@ -5,7 +5,7 @@ export default function busyIndicator(props) {
     return (
         <View style={styles.busyIndicator}>
             <ActivityIndicator animating={props.showBusy} size="large"/>
-            <Text>{props.text ? props.text : ""}</Text>
+            <Text style={{color: "white"}}>{props.text ? props.text : ""}</Text>
         </View>
     );
 }
@@ -13,7 +13,7 @@ export default function busyIndicator(props) {
 const styles = StyleSheet.create({
     busyIndicator:{
         flex: 1,
-        backgroundColor: "white",
+        backgroundColor: "#313a4a",
         position: 'absolute',
         left: 0,
         right: 0,

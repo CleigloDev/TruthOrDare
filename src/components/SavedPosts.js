@@ -110,7 +110,7 @@ export default function SavedPost({ navigation }) {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "#313a4a"
     },
     buttonAdd: {
         position: 'absolute',

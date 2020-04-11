@@ -6,6 +6,7 @@ import '@react-native-firebase/firestore';
 
 import fontSize from '../modules/fontSize';
 import AsyncText from '../AsyncComponents/AsyncText';
+import { color } from 'react-native-reanimated';
 
 firebase.firestore().settings({
     cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
         margin: 30, 
         marginBottom: 0,
         borderRadius: 25, 
-        backgroundColor: 'white',
+        backgroundColor: '#2b3547',
         borderWidth: 1,
         borderColor: 'lightgray',
         justifyContent: 'center'
@@ -63,11 +64,13 @@ const styles = StyleSheet.create({
     textHeader: {
         paddingTop: 10, 
         paddingLeft: 10, 
-        fontSize: fontSize(13)
+        fontSize: fontSize(13),
+        color: "#d1d1d1"
     },
     textAsync: {
         padding: 20, 
         flexShrink: 1, 
-        fontSize: fontSize(17)
+        fontSize: fontSize(17),
+        color: "white"
     }
 });

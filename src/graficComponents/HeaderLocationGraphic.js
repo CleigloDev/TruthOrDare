@@ -18,10 +18,10 @@ export default function HeaderLocation(props) {
     return (
         <>  
             <View style={styles.viewWrapper}>
-                <Text>Location: </Text>
+                <Text style={{color: "white"}}>Location: </Text>
                 <TouchableOpacity>
                     {props.userCoords === "" ? 
-                        <Text style={{fontWeight: 'bold'}}>Sconosciuta!</Text> :
+                        <Text style={{fontWeight: 'bold', color: "white"}}>Sconosciuta!</Text> :
                         <AsyncText textPromise={_getUserCity()} fnProcessText={_setCity}/>}
                 </TouchableOpacity>
             </View>
@@ -32,10 +32,10 @@ export default function HeaderLocation(props) {
 const styles = StyleSheet.create({
     viewWrapper: {
         flex: 0.2, 
-        backgroundColor: 'white', 
+        backgroundColor: '#252c38', 
         borderBottomLeftRadius: 5, 
         borderBottomRightRadius: 5,
-        borderColor: 'gray', 
+        borderColor: 'white', 
         borderBottomWidth: 1.5,
         flexDirection: 'row', 
         justifyContent: 'center', 

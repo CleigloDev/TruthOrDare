@@ -6,7 +6,7 @@ export default function HeaderText(props) {
     return (
         <>  
             <View style={styles.viewWrapper}>
-                <Text>{props.text}</Text>
+                <Text style={{color: "white"}}>{props.text}</Text>
             </View>
         </>
     );
@@ -15,7 +15,7 @@ export default function HeaderText(props) {
 const styles = StyleSheet.create({
     viewWrapper: {
         flex: 0.2, 
-        backgroundColor: 'white', 
+        backgroundColor: '#252c38', 
         borderBottomLeftRadius: 5, 
         borderBottomRightRadius: 5,
         borderColor: 'gray', 

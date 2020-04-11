@@ -12,6 +12,7 @@ export default function NewMessageFooter(props) {
         <View style={styles.mainView}>
             <View style={styles.viewNewComment}>
                 <TextInput style={{...styles.inputNewComment, ...(props.styles ? props.styles : {})}}
+                    placeholderTextColor="#bdbebf"
                     placeholder={"Inserisci un commento"}
                     value={props.text}
                     onChangeText={props.setText}
@@ -53,6 +54,7 @@ const styles = StyleSheet.create({
         marginBottom: Platform.OS === "ios" ? 5 : 0,
         marginLeft: 5,
         fontSize: fontSize(18),
+        color: "white"
     },
     viewNewComment: {
         flex: 2,

@@ -13,7 +13,7 @@ export default function PostGraphic(props) {
         <View style={styles.viewContent}>
             <View style={styles.flexRow}>
                 <View style={styles.viewLocation}>
-                    <MaterialCommunityIcons name="map-marker-outline" size={15} />
+                    <MaterialCommunityIcons name="map-marker-outline" size={15} color="#d1d1d1"/>
                     <Text style={styles.textLocation}>{props.location}</Text>
                 </View>
                 <Tooltip ref={refTooltip} 
@@ -22,7 +22,7 @@ export default function PostGraphic(props) {
                     <TouchableOpacity onPress={refTooltip && refTooltip.current ? 
                         refTooltip.current.toggleTooltip : null}
                         style={{padding: 10}}>
-                        <SimpleLineIcons name="options-vertical" size={15}/>
+                        <SimpleLineIcons name="options-vertical" size={15} color="#d1d1d1"/>
                     </TouchableOpacity>
                 </Tooltip>
             </View>
@@ -33,14 +33,14 @@ export default function PostGraphic(props) {
                 {props.comments === undefined ? <></> :
                     <View style={{flex: 2}}>
                         <TouchableOpacity style={styles.flexRow} onPress={props.navigate}>
-                            <MaterialCommunityIcons name="comment-processing" size={22}/>
-                        <Text style={{paddingLeft: 10}}>{props.comments+" Comment"+(props.comments !== 1?"i":"o")}</Text>
+                            <MaterialCommunityIcons name="comment-processing" size={22} color="#d1d1d1"/>
+                        <Text style={{paddingLeft: 10, color: "white"}}>{props.comments+" Comment"+(props.comments !== 1?"i":"o")}</Text>
                         </TouchableOpacity>
                     </View>}
                 {props.uidCreator === props.uidCurrent ? <></> :
                     <View style={{flex: props.comments === undefined ? 1 : 0, alignItems: 'flex-end'}}>
                         <TouchableOpacity onPress={props.chat}>
-                            <MaterialCommunityIcons name="wechat" size={30}/>
+                            <MaterialCommunityIcons name="wechat" size={30} color="#d1d1d1"/>
                         </TouchableOpacity>
                     </View>}
             </View>
@@ -56,7 +56,8 @@ const styles = StyleSheet.create({
     textContent: {
         flexShrink: 1, 
         fontSize: fontSize(20),
-        paddingBottom: 30
+        paddingBottom: 30,
+        color: "white"
     },
     viewContent:{
         height: "auto", 
@@ -71,11 +72,12 @@ const styles = StyleSheet.create({
     },
     textLocation: {
         fontSize: fontSize(13), 
-        paddingBottom: 10
+        paddingBottom: 10,
+        color: "white"
     },
     tooltip: {
         height: "auto", 
-        backgroundColor: "white", 
+        backgroundColor: "#252c38", 
         borderColor: "black", 
         borderWidth: 1
     }
